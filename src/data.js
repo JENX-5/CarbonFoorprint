@@ -27,9 +27,6 @@
  * This is documented again in README.md under "Assumptions".
  * ---------------------------------------------------------------------------
  */
-(function (global) {
-  'use strict';
-
   /** Emission factors. Units are noted on every entry. */
   var EMISSION_FACTORS = {
     transportation: {
@@ -245,7 +242,7 @@
     ]
   };
 
-  global.CarbonData = {
+  export const CarbonData = {
     EMISSION_FACTORS: EMISSION_FACTORS,
     CATEGORY_ORDER: CATEGORY_ORDER,
     CATEGORY_LABELS: CATEGORY_LABELS,
@@ -263,4 +260,3 @@
     ACHIEVEMENTS: ACHIEVEMENTS,
     SUSTAINABILITY_TIPS: SUSTAINABILITY_TIPS
   };
-})(window);
