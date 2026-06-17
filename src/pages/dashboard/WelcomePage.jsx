@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAppState } from '../../state/AppStateContext.jsx';
 import { BrandMark } from '../../components/common/BrandMark.jsx';
 import { ArrowRight, Calculator, Sparkles, SlidersHorizontal, Trophy, Upload, ChevronLeft, ChevronRight, Check } from '../../components/icons/index.jsx';
@@ -66,7 +66,7 @@ export function WelcomePage() {
       try {
         const parsed = JSON.parse(event.target.result);
         actions.importData(parsed);
-      } catch (err) {
+      } catch {
         alert("Failed to import data: invalid JSON format.");
       }
     };

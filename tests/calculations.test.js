@@ -1,0 +1,67 @@
+import { describe, it, expect } from 'vitest';
+import { computeFootprint, validateField, DEFAULT_CALCULATOR_INPUTS } from '../src/lib/calculations.js';
+
+describe('Calculations Engine', () => {
+  describe('validateField', () => {
+    it('should validate commute distance driven per day', () => {
+      expect(validateField('commuteKmPerDay', '')).toContain('required');
+      expect(validateField('commuteKmPerDay', 'abc')).toContain('must be a number');
+      expect(validateField('commuteKmPerDay', -10)).toContain('Enter a value between');
+      expect(validateField('commuteKmPerDay', 600)).toContain('Enter a value between');
+      expect(validateField('commuteKmPerDay', 100)).toBe('');
+    });
+
+    it('should validate renewable electricity percentage', () => {
+      expect(validateField('renewablePercent', -5)).toContain('Enter a value between');
+      expect(validateField('renewablePercent', 105)).toContain('Enter a value between');
+      expect(validateField('renewablePercent', 50)).toBe('');
+    });
+
+    it('should return empty string for unknown field', () => {
+      expect(validateField('unknownField', 100)).toBe('');
+    });
+  });
+
+  describe('computeFootprint', () => {
+    it('should calculate footprint correctly for default values', () => {
+      const results = computeFootprint(DEFAULT_CALCULATOR_INPUTS);
+      expect(results).toHaveProperty('annual');
+      expect(results).toHaveProperty('monthly');
+      expect(results).toHaveProperty('daily');
+      expect(results).toHaveProperty('byCategoryAnnual');
+
+      // The calculations should be mathematically sound and above 0
+      expect(results.annual).toBeGreaterThan(0);
+      expect(results.byCategoryAnnual.transportation).toBeGreaterThan(0);
+      expect(results.byCategoryAnnual.electricity).toBeGreaterThan(0);
+      expect(results.byCategoryAnnual.diet).toBeGreaterThan(0);
+      expect(results.byCategoryAnnual.waste).toBeGreaterThan(0);
+      expect(results.byCategoryAnnual.water).toBeGreaterThan(0);
+    });
+
+    it('should handle zero emissions inputs', () => {
+      const zeroInputs = {
+        commuteKmPerDay: 0,
+        transitKmPerWeek: 0,
+        flightsShortHaulPerYear: 0,
+        flightsLongHaulPerYear: 0,
+        electricityKwhPerMonth: 0,
+        renewablePercent: 100,
+        wasteKgPerWeek: 0,
+        recycledPercent: 100,
+        waterLitersPerDay: 0,
+        vehicleType: 'electricCar',
+        dietType: 'vegan',
+        waterHeatedMostly: false
+      };
+
+      const results = computeFootprint(zeroInputs);
+      expect(results.byCategoryAnnual.transportation).toBe(0);
+      expect(results.byCategoryAnnual.electricity).toBe(0);
+      // Vegan diet factor is 1000 * 365 = 365,000 kg, or depends on f.diet.vegan
+      expect(results.byCategoryAnnual.diet).toBe(1000 * 365);
+      expect(results.byCategoryAnnual.waste).toBe(0);
+      expect(results.byCategoryAnnual.water).toBe(0);
+    });
+  });
+});

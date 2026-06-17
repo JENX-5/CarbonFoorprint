@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "types": ["jest", "vitest/globals"],
+    "types": ["jest"],
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "checkJs": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noImplicitAny": false
+  },
+  "exclude": ["node_modules", "dist"]
+}

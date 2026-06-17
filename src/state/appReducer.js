@@ -13,6 +13,11 @@ import { defaultState, pushHistoryEntry } from '../lib/storage.js';
 import { applyAchievements, toggleChecklistItem, completeWeeklyChallenge } from '../lib/gamification.js';
 import { CarbonData as Data } from '../lib/data.js';
 
+/**
+ * Wraps state update and applies any achievements that are newly earned.
+ * @param {any} state - The temporary updated state.
+ * @returns {{ next: any, newlyUnlocked: any[] }} The state with achievements applied and newly unlocked list.
+ */
 function withAchievements(state) {
   const { unlockedAchievements, ecoScore, newlyUnlocked } = applyAchievements(state);
   return { next: { ...state, unlockedAchievements, ecoScore }, newlyUnlocked };
@@ -20,6 +25,12 @@ function withAchievements(state) {
 
 export const initialActionResult = (state) => ({ state, newlyUnlocked: [], events: [] });
 
+/**
+ * Global application state reducer.
+ * @param {any} state - Current global application state.
+ * @param {{ type: string, payload?: any }} action - Dispatched action.
+ * @returns {any} The next state object.
+ */
 export function appReducer(state, action) {
   switch (action.type) {
     case 'CALCULATE': {

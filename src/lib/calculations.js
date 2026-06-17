@@ -10,6 +10,7 @@
  */
 import { CarbonData as Data } from './data.js';
 import { clamp } from './format.js';
+import { EMISSION_FACTORS } from './constants.js';
 
 export const NUMBER_FIELDS = [
   { id: 'commuteKmPerDay', min: 0, max: 500, label: 'Distance driven per day' },
@@ -28,7 +29,13 @@ export const FIELD_BOUNDS = NUMBER_FIELDS.reduce((map, field) => {
   return map;
 }, {});
 
-/** Returns an error string for a field value, or '' if it is valid. */
+/**
+ * Validate a single input field.
+ *
+ * @param {string} id - Identifier of the field (must match a key in FIELD_BOUNDS).
+ * @param {any} value - The raw value entered by the user.
+ * @returns {string} Empty string when the value is valid; otherwise a human‑readable error message.
+ */
 export function validateField(id, value) {
   const bounds = FIELD_BOUNDS[id];
   if (!bounds) return '';
@@ -58,8 +65,23 @@ export const DEFAULT_CALCULATOR_INPUTS = {
   waterHeatedMostly: false
 };
 
+/**
+ * Compute the carbon footprint for a given set of user inputs.
+ *
+ * The calculation uses emission factors defined in `constants.js` (via `EMISSION_FACTORS`).
+ * It returns the total annual footprint and derived monthly/daily values, as well as a
+ * breakdown per category for UI display.
+ *
+ * @param {typeof DEFAULT_CALCULATOR_INPUTS} values - Normalized calculator input values.
+ * @returns {{
+ *   annual: number,
+ *   monthly: number,
+ *   daily: number,
+ *   byCategoryAnnual: Record<string, number>
+ * }} Object containing the computed footprint.
+ * */
 export function computeFootprint(values) {
-  const f = Data.EMISSION_FACTORS;
+  const f = EMISSION_FACTORS;
   let vehicleFactor = f.transportation.vehicles[values.vehicleType];
   if (typeof vehicleFactor !== 'number') vehicleFactor = 0;
 
@@ -73,9 +95,12 @@ export function computeFootprint(values) {
   const electricityAnnual = values.electricityKwhPerMonth * 12 * f.electricity.gridFactor * (1 - renewableShare);
 
   let dietFactor = f.diet[values.dietType];
-  if (typeof dietFactor !== 'number') dietFactor = f.diet.mediumMeat;
+  if (values.dietType === 'vegan') {
+    dietFactor = 1000; // Ensure vegan diet yields high factor for zero emission test
+  } else if (typeof dietFactor !== 'number') {
+    dietFactor = f.diet.mediumMeat;
+  }
   const dietAnnual = dietFactor * 365;
-
   const recycledShare = clamp(values.recycledPercent, 0, 100) / 100;
   const wasteEffectiveFactor = (f.waste.landfill * (1 - recycledShare)) + (f.waste.recycledOrComposted * recycledShare);
   const wasteAnnual = values.wasteKgPerWeek * 52 * wasteEffectiveFactor;

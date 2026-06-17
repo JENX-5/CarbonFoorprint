@@ -142,11 +142,11 @@
 
   /** Gamification levels. Highest "min" the score clears wins. Keep sorted ascending. */
   var LEVELS = [
-    { name: 'Sprout', min: 0 },
-    { name: 'Sapling', min: 100 },
-    { name: 'Young Tree', min: 300 },
-    { name: 'Mature Tree', min: 700 },
-    { name: 'Forest Guardian', min: 1500 }
+    { name: 'Eco Novice', min: 0 },
+    { name: 'Eco Explorer', min: 100 },
+    { name: 'Eco Adventurer', min: 300 },
+    { name: 'Eco Champion', min: 700 },
+    { name: 'Eco Legend', min: 1500 }
   ];
 
   var ACTION_POINTS = {
@@ -162,7 +162,7 @@
     { id: 'activeCommute', label: 'Walked, cycled, or used public transit for at least one trip', points: 10 },
     { id: 'plantMeal', label: 'Ate at least one fully plant-based meal', points: 10 },
     { id: 'unpluggedDevices', label: 'Turned off or unplugged devices that were not in use', points: 10 },
-    { id: 'recycledSomething', label: 'Recycled or composted instead of using the trash', points: 10 },
+    { id: 'recycleShare', label: 'Recycled share item', points: 10 },
     { id: 'noSingleUsePlastic', label: 'Avoided single-use plastic for the entire day', points: 10 }
   ];
 

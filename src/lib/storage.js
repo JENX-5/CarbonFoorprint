@@ -10,6 +10,8 @@
  * ---------------------------------------------------------------------------
  */
 
+import { Logger } from './logger.js';
+
 export const STORAGE_KEY = 'contourCarbonAppState_v2';
 const LEGACY_STORAGE_KEY = 'contourCarbonAppState_v1';
 export const MAX_HISTORY_ENTRIES = 24;
@@ -22,7 +24,8 @@ export const Storage = {
       const parsed = JSON.parse(raw);
       if (typeof parsed !== 'object' || parsed === null) return null;
       return parsed;
-    } catch (e) {
+    } catch (error) {
+      Logger.error('Failed to load application state from storage', error);
       return null;
     }
   },
@@ -30,7 +33,8 @@ export const Storage = {
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       return true;
-    } catch (e) {
+    } catch (error) {
+      Logger.error('Failed to save application state to storage', error);
       return false;
     }
   },
@@ -39,7 +43,8 @@ export const Storage = {
       window.localStorage.removeItem(STORAGE_KEY);
       window.localStorage.removeItem(LEGACY_STORAGE_KEY);
       return true;
-    } catch (e) {
+    } catch (error) {
+      Logger.error('Failed to clear application state from storage', error);
       return false;
     }
   }
@@ -47,7 +52,7 @@ export const Storage = {
 
 export function defaultState() {
   return {
-    inputs: null,
+    inputs: {},
     results: null,
     calculatorCompleted: false,
     simulatorRun: false,
@@ -81,7 +86,8 @@ export function loadState() {
       history: Array.isArray(parsed.history) ? parsed.history.slice(-MAX_HISTORY_ENTRIES) : base.history,
       theme: parsed.theme === 'light' || parsed.theme === 'dark' ? parsed.theme : base.theme
     };
-  } catch (e) {
+  } catch (error) {
+    Logger.error('Error migrating or parsing loaded state', error);
     return base;
   }
 }

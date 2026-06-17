@@ -32,13 +32,26 @@ export function ScoreRing({ score = 0, ratingClassName = 'rating-good', size = S
   const [drawnScore, setDrawnScore] = useState(animate ? 0 : target);
 
   useEffect(() => {
-    if (!animate) {
-      setDrawnScore(target);
-      return;
-    }
-    setDrawnScore(0);
-    const raf = requestAnimationFrame(() => setDrawnScore(target));
-    return () => cancelAnimationFrame(raf);
+    let active = true;
+    let nestedRaf = null;
+
+    const mainRaf = requestAnimationFrame(() => {
+      if (!active) return;
+      if (!animate) {
+        setDrawnScore(target);
+      } else {
+        setDrawnScore(0);
+        nestedRaf = requestAnimationFrame(() => {
+          if (active) setDrawnScore(target);
+        });
+      }
+    });
+
+    return () => {
+      active = false;
+      cancelAnimationFrame(mainRaf);
+      if (nestedRaf) cancelAnimationFrame(nestedRaf);
+    };
   }, [target, animate]);
 
   const dashOffset = CIRCUMFERENCE * (1 - drawnScore / 100);

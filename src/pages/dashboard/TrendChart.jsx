@@ -1,4 +1,4 @@
-import React from 'react';
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -37,7 +37,7 @@ export function TrendChart({ history = [] }) {
     try {
       const date = new Date(isoString);
       return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', '');
-    } catch (e) {
+    } catch {
       return 'Unknown';
     }
   };

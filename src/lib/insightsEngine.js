@@ -5,10 +5,23 @@
  * also carries a `simulatorPreset` so the Insights page can hand a
  * recommendation straight to the Simulator ("Try this scenario").
  */
+import { EMISSION_FACTORS } from './constants.js';
 import { CarbonData as Data } from './data.js';
 
+/**
+ * Generates custom sustainability insights and recommendations.
+ * @param {any} values - The raw calculator inputs.
+ * @param {Record<string, number>} byCategoryAnnual - Annual emissions by category.
+ * @returns {{
+ *   topCategory: string,
+ *   topShare: number,
+ *   annualTotal: number,
+ *   recommendations: Array<{ category: string, savingsKg: number, text: string, simulatorPreset: Record<string, any> }>,
+ *   totalPotentialSavings: number
+ * }} The structured insights report.
+ */
 export function generateInsights(values, byCategoryAnnual) {
-  const f = Data.EMISSION_FACTORS;
+  const f = EMISSION_FACTORS;
   const annualTotal = Data.CATEGORY_ORDER.reduce((sum, k) => sum + byCategoryAnnual[k], 0);
 
   const topCategory = Data.CATEGORY_ORDER.reduce(

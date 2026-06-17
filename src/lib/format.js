@@ -19,14 +19,15 @@ export function formatNumber(value, decimals) {
   const rounded = clamp(v, 0, Number.MAX_SAFE_INTEGER);
   try {
     return rounded.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
-  } catch (e) {
+  } catch {
     return rounded.toFixed(d);
   }
 }
 
 export function formatSigned(value, decimals) {
   const d = typeof decimals === 'number' ? decimals : 0;
-  const sign = value > 0 ? '+' : value < 0 ? '\u2212' : '';
+  // Zero is considered non‑negative, so always prepend '+'
+  const sign = value >= 0 ? '+' : '\u2212';
   return sign + formatNumber(Math.abs(value), d);
 }
 
@@ -67,10 +68,10 @@ export function getCurrentWeekKey() {
 
 /** Short, friendly relative-ish date label used in history lists. */
 export function formatHistoryDate(iso) {
-  try {
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  } catch (e) {
+  // Guard against invalid ISO strings which produce an "Invalid Date" object
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) {
     return '';
   }
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }

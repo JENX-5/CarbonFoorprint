@@ -1,6 +1,6 @@
-import React from 'react';
 
-export function BenchmarkBar({ annual, ratingClassName }) {
+
+export function BenchmarkBar({ annual }) {
   const maxScale = 10000;
   const percentage = Math.min((annual / maxScale) * 100, 100);
 

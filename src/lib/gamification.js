@@ -15,6 +15,11 @@
 import { CarbonData as Data } from './data.js';
 import { getTodayKey, getYesterdayKey, getCurrentWeekKey } from './format.js';
 
+/**
+ * Retrieves the level descriptor based on the current Eco Score.
+ * @param {number} ecoScore - The user's Eco Score.
+ * @returns {{ name: string, icon: string, min: number }} The current level definition.
+ */
 export function getLevel(ecoScore) {
   const levels = Data.LEVELS;
   let current = levels[0];
@@ -24,7 +29,11 @@ export function getLevel(ecoScore) {
   return current;
 }
 
-/** The level after `current`, or null if already at the top level. */
+/**
+ * The level after the current one, or null if already at the top level.
+ * @param {number} ecoScore - The user's Eco Score.
+ * @returns {{ name: string, icon: string, min: number } | null} The next level definition or null.
+ */
 export function getNextLevel(ecoScore) {
   const levels = Data.LEVELS;
   const current = getLevel(ecoScore);
@@ -32,6 +41,16 @@ export function getNextLevel(ecoScore) {
   return idx >= 0 && idx < levels.length - 1 ? levels[idx + 1] : null;
 }
 
+/**
+ * Calculates details about the progress to the next level.
+ * @param {number} ecoScore - The user's Eco Score.
+ * @returns {{
+ *   current: { name: string, icon: string, min: number },
+ *   next: { name: string, icon: string, min: number } | null,
+ *   percent: number,
+ *   pointsToNext: number
+ * }} The progress details.
+ */
 export function getLevelProgress(ecoScore) {
   const current = getLevel(ecoScore);
   const next = getNextLevel(ecoScore);
@@ -42,6 +61,13 @@ export function getLevelProgress(ecoScore) {
   return { current, next, percent: Math.min(100, Math.max(0, percent)), pointsToNext: Math.max(0, next.min - ecoScore) };
 }
 
+/**
+ * Retrieves the current weekly eco challenge based on the ISO week number.
+ * @returns {{
+ *   weekKey: string,
+ *   challenge: { id: string, title: string, description: string, category: string }
+ * }} The challenge info.
+ */
 export function getCurrentChallenge() {
   const weekKey = getCurrentWeekKey();
   const info = weekKey.split('-W');
@@ -50,6 +76,12 @@ export function getCurrentChallenge() {
   return { weekKey, challenge: Data.CHALLENGES[index] };
 }
 
+/**
+ * Evaluates whether an achievement meets its target conditions.
+ * @param {any} achievement - The achievement definition.
+ * @param {any} metrics - The snapshot of user metrics.
+ * @returns {boolean} True if the conditions are met, false otherwise.
+ */
 function meetsCondition(achievement, metrics) {
   const value = metrics[achievement.metric];
   switch (achievement.comparator) {
@@ -66,7 +98,11 @@ function meetsCondition(achievement, metrics) {
   }
 }
 
-/** Builds the "metrics snapshot" object the achievement rules are evaluated against. */
+/**
+ * Builds the metrics snapshot object that the achievement rules are evaluated against.
+ * @param {any} state - The global application state.
+ * @returns {Record<string, any>} Snapshot metrics.
+ */
 export function buildMetricsSnapshot(state) {
   const todayKey = getTodayKey();
   const checklistToday = state.checklist && state.checklist.date === todayKey ? state.checklist : null;
@@ -86,7 +122,11 @@ export function buildMetricsSnapshot(state) {
   };
 }
 
-/** Returns the list of achievement definitions newly satisfied (not yet unlocked). */
+/**
+ * Returns the list of achievement definitions newly satisfied (not yet unlocked).
+ * @param {any} state - The global application state.
+ * @returns {any[]} Array of achievements.
+ */
 export function evaluateNewAchievements(state) {
   const metrics = buildMetricsSnapshot(state);
   const unlocked = new Set(state.unlockedAchievements || []);
@@ -97,6 +137,8 @@ export function evaluateNewAchievements(state) {
  * Applies newly-earned achievements to a state slice: adds their ids to
  * unlockedAchievements and credits ecoScore. Returns { unlockedAchievements,
  * ecoScore, newlyUnlocked } — pure, no mutation of the input state.
+ * @param {any} state - The global application state.
+ * @returns {{ unlockedAchievements: string[], ecoScore: number, newlyUnlocked: any[] }} The updated details.
  */
 export function applyAchievements(state) {
   const newly = evaluateNewAchievements(state);
@@ -113,8 +155,10 @@ export function applyAchievements(state) {
  * calendar day clears yesterday's checked state), awards points once per
  * item per day, and advances the current/longest streak the first time any
  * item is completed on a new day. Pure function — returns a new state
- * object, achievements are applied separately by the caller so toast/score
- * side-effects stay in one place.
+ * object.
+ * @param {any} state - The global application state.
+ * @param {string} itemId - The checklist item ID.
+ * @returns {any} The updated state object.
  */
 export function toggleChecklistItem(state, itemId) {
   const todayKey = getTodayKey();
@@ -159,7 +203,11 @@ export function toggleChecklistItem(state, itemId) {
   };
 }
 
-/** Marks this week's challenge complete (idempotent — one award per ISO week). */
+/**
+ * Marks this week's challenge complete (idempotent — one award per ISO week).
+ * @param {any} state - The global application state.
+ * @returns {any} The updated state object.
+ */
 export function completeWeeklyChallenge(state) {
   const { weekKey } = getCurrentChallenge();
   if (state.weeklyChallenge.completedWeeks.includes(weekKey)) return state;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { SkipLink } from './SkipLink.jsx';
 import { Sidebar } from './Sidebar.jsx';
@@ -11,22 +11,23 @@ export function AppShell() {
   const [collapsed, setCollapsed] = useState(() => {
     try {
       return window.localStorage.getItem(COLLAPSE_KEY) === '1';
-    } catch (e) {
+    } catch {
       return false;
     }
   });
   const location = useLocation();
-
-  useEffect(() => {
+  const [lastPathname, setLastPathname] = useState(location.pathname);
+  if (location.pathname !== lastPathname) {
+    setLastPathname(location.pathname);
     setMobileNavOpen(false);
-  }, [location.pathname]);
+  }
 
   const toggleCollapsed = () => {
     setCollapsed((prev) => {
       const next = !prev;
       try {
         window.localStorage.setItem(COLLAPSE_KEY, next ? '1' : '0');
-      } catch (e) {
+      } catch {
         /* ignore */
       }
       return next;

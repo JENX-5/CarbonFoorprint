@@ -16,8 +16,10 @@ export function useCountUp(value, duration = 900) {
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (prefersReduced || typeof value !== 'number' || !isFinite(value)) {
-      setDisplay(value);
-      fromRef.current = value;
+      rafRef.current = requestAnimationFrame(() => {
+        setDisplay(value);
+        fromRef.current = value;
+      });
       return;
     }
 

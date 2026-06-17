@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useMemo, useReducer, useRef } from 'react';
 import { appReducer } from './appReducer.js';
 import { loadState, Storage } from '../lib/storage.js';
@@ -55,7 +56,8 @@ export function AppStateProvider({ children }) {
   const isFirstRender = useRef(true);
 
   useEffect(() => {
-    const { _meta, ...persisted } = state;
+    const persisted = { ...state };
+    delete persisted._meta;
     Storage.save(persisted);
   }, [state]);
 
@@ -150,13 +152,13 @@ export function AppStateProvider({ children }) {
       dispatch({ type: 'RESET_ALL' });
     },
     exportData() {
-      const { _meta, ...persisted } = state;
+      const persisted = { ...state };
+      delete persisted._meta;
       downloadJson(`contour-data-${new Date().toISOString().slice(0, 10)}.json`, persisted);
     },
     importData(parsed) {
       dispatch({ type: 'IMPORT_STATE', payload: { state: parsed } });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [state]);
 
   const value = useMemo(() => ({ state, derived, actions }), [state, derived, actions]);
