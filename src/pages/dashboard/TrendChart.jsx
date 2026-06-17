@@ -24,11 +24,13 @@ ChartJS.register(
 );
 
 export function TrendChart({ history = [] }) {
-  const isDark = document.documentElement.classList.contains('dark') || 
-                 (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark' || 
+                 (!document.documentElement.getAttribute('data-theme') && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)';
   const textColor = isDark ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)';
+  const chartColor = isDark ? '#e9c46a' : '#1b4332';
+  const chartFill = isDark ? 'rgba(233, 196, 106, 0.1)' : 'rgba(27, 67, 50, 0.12)';
 
   // Format dates nicely
   const formatDate = (isoString) => {
@@ -46,13 +48,13 @@ export function TrendChart({ history = [] }) {
       {
         label: 'Annual Footprint',
         data: history.map((entry) => entry.annual),
-        borderColor: '#1b4332',
-        backgroundColor: 'rgba(27, 67, 50, 0.12)',
+        borderColor: chartColor,
+        backgroundColor: chartFill,
         borderWidth: 2,
         tension: 0.35,
         fill: true,
-        pointBackgroundColor: '#1b4332',
-        pointBorderColor: '#ffffff',
+        pointBackgroundColor: chartColor,
+        pointBorderColor: isDark ? '#1f2723' : '#ffffff',
         pointBorderWidth: 1.5,
         pointRadius: 4,
         pointHoverRadius: 6,

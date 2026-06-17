@@ -49,7 +49,29 @@ export function Sidebar({ isOpen, onClose, collapsed, onToggleCollapsed }) {
         </nav>
 
         <div className="sidebar__footer">
-          {!collapsed ? (
+          {collapsed ? (
+            <div className="sidebar__utility-collapsed">
+              <button
+                type="button"
+                className="sidebar__utility-collapsed-btn"
+                onClick={actions.exportData}
+                title="Export data"
+                aria-label="Export data"
+              >
+                <Download size={15} aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                className={`sidebar__utility-collapsed-btn ${confirmingReset ? 'sidebar__utility-collapsed-btn--danger' : ''}`}
+                onClick={handleReset}
+                onBlur={() => setConfirmingReset(false)}
+                title={confirmingReset ? 'Confirm reset?' : 'Reset data'}
+                aria-label={confirmingReset ? 'Confirm reset?' : 'Reset data'}
+              >
+                <RotateCcw size={15} aria-hidden="true" />
+              </button>
+            </div>
+          ) : (
             <div className="sidebar__utility">
               <button type="button" className="sidebar__utility-btn" onClick={actions.exportData}>
                 <Download size={15} aria-hidden="true" /> Export data
@@ -63,7 +85,7 @@ export function Sidebar({ isOpen, onClose, collapsed, onToggleCollapsed }) {
                 <RotateCcw size={15} aria-hidden="true" /> {confirmingReset ? 'Confirm reset?' : 'Reset data'}
               </button>
             </div>
-          ) : null}
+          )}
           <button
             type="button"
             className="sidebar__collapse-btn"

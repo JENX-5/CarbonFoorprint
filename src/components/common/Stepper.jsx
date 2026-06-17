@@ -24,7 +24,10 @@ export function Stepper({ steps, currentIndex, furthestAllowedIndex, onStepClick
               <span className="stepper__index" aria-hidden="true">
                 {status === 'done' ? <Check size={14} /> : index + 1}
               </span>
-              <span className="stepper__label">{step.label}</span>
+              <span className="stepper__label">
+                {step.label}
+                <span className="visually-hidden"> ({status} step)</span>
+              </span>
             </button>
             {index < steps.length - 1 ? <span className="stepper__connector" aria-hidden="true" /> : null}
           </li>

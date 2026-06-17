@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom';
 import { findNavItemByPath } from '../../lib/navigation.js';
 import { BrandMark } from '../common/BrandMark.jsx';
-import { Menu, Sun, Moon, Monitor } from '../icons/index.jsx';
+import { Menu, Sun, Moon, Monitor, Trophy } from '../icons/index.jsx';
 import { useAppState } from '../../state/AppStateContext.jsx';
 
 const THEME_CYCLE = { system: 'light', light: 'dark', dark: 'system' };
@@ -11,7 +11,7 @@ const THEME_LABEL = { system: 'System theme', light: 'Light theme', dark: 'Dark 
 export function Topbar({ onOpenMobileNav }) {
   const location = useLocation();
   const current = findNavItemByPath(location.pathname);
-  const { state, actions } = useAppState();
+  const { state, derived, actions } = useAppState();
   const ThemeIcon = THEME_ICON[state.theme] || Monitor;
 
   return (
@@ -35,6 +35,13 @@ export function Topbar({ onOpenMobileNav }) {
       </div>
 
       <div className="topbar__actions">
+        {derived.level && (
+          <div className="topbar__eco-badge" title={`Your Eco Score is ${state.ecoScore} (Level: ${derived.level.name})`}>
+            <Trophy size={14} className="topbar__eco-icon" aria-hidden="true" />
+            <span className="topbar__eco-level">{derived.level.name}</span>
+            <span className="topbar__eco-points">({state.ecoScore} pts)</span>
+          </div>
+        )}
         <button
           type="button"
           className="icon-button"

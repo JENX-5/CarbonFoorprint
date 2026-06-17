@@ -41,7 +41,7 @@ export function CalculatorPage() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    const val = type === 'checkbox' ? checked : (type === 'number' ? Number(value) : value);
+    const val = type === 'checkbox' ? checked : (type === 'number' ? (value === '' ? '' : Number(value)) : value);
     
     // Update form
     const updatedForm = { ...form, [name]: val };
@@ -50,7 +50,12 @@ export function CalculatorPage() {
     // Validate the field on change
     const fieldConf = currentStep.fields?.find(f => f.name === name);
     if (fieldConf && type === 'number') {
-      if (val < fieldConf.min || val > fieldConf.max) {
+      if (value === '') {
+        setErrors(prev => ({
+          ...prev,
+          [name]: 'This field is required'
+        }));
+      } else if (val < fieldConf.min || val > fieldConf.max) {
         setErrors(prev => ({
           ...prev,
           [name]: `Must be between ${fieldConf.min} and ${fieldConf.max} ${fieldConf.unit || ''}`
@@ -72,7 +77,7 @@ export function CalculatorPage() {
     for (const field of step.fields) {
       if (field.type === 'number') {
         const val = form[field.name];
-        if (typeof val !== 'number' || isNaN(val) || val < field.min || val > field.max) {
+        if (val === '' || val === undefined || val === null || isNaN(val) || val < field.min || val > field.max) {
           return false;
         }
       }
