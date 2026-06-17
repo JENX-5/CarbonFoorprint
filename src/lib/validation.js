@@ -3,7 +3,7 @@
  * Utility functions for validating calculator input fields.
  * Centralizes the logic so multiple modules can reuse the same validation rules.
  */
-import { FIELD_BOUNDS } from './calculations.js';
+import { FIELD_BOUNDS } from "./calculations.js";
 
 /**
  * Validate a single field by its identifier.
@@ -14,8 +14,8 @@ import { FIELD_BOUNDS } from './calculations.js';
  */
 export function validateField(id, value) {
   const bounds = FIELD_BOUNDS[id];
-  if (!bounds) return '';
-  if (value === '' || value === null || typeof value === 'undefined') {
+  if (!bounds) return "";
+  if (value === "" || value === null || typeof value === "undefined") {
     return `${bounds.label} is required.`;
   }
   const num = Number(value);
@@ -23,5 +23,5 @@ export function validateField(id, value) {
   if (num < bounds.min || num > bounds.max) {
     return `Enter a value between ${bounds.min} and ${bounds.max}.`;
   }
-  return '';
+  return "";
 }

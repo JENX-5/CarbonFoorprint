@@ -1,24 +1,32 @@
 /**
- * scoring.js — unchanged math from the original `Scoring` namespace.
+ * scoring.js
+ * ---------------------------------------------------------------------------
+ * The scoring engine that computes environmental scores and ratings based
+ * on annual carbon footprints.
+ * ---------------------------------------------------------------------------
  */
-import { CarbonData as Data } from './data.js';
-import { clamp } from './format.js';
+import { CarbonData as Data } from "./data.js";
+import { clamp } from "./format.js";
 
 /**
- * Computes the environmental score (0-100) based on annual carbon footprint.
- * @param {number} annual - Annual footprint in kg CO2e.
- * @returns {number} The rounded score out of 100.
+ * Computes the environmental eco score (0 to 100) based on annual carbon footprint.
+ * Best (100 score) is best footprint threshold, Worst (0 score) is worst threshold.
+ *
+ * @param {number} annual - Annual carbon footprint in kg CO2e.
+ * @returns {number} The rounded eco score from 0 to 100.
  */
 export function computeScore(annual) {
   const bounds = Data.SCORE_BOUNDS;
-  const raw = 100 - (((annual - bounds.best) / (bounds.worst - bounds.best)) * 100);
+  const raw =
+    100 - ((annual - bounds.best) / (bounds.worst - bounds.best)) * 100;
   return Math.round(clamp(raw, 0, 100));
 }
 
 /**
  * Maps an eco score to a rating class and text label.
- * @param {number} score - The eco score out of 100.
- * @returns {{ id: string, label: string, min: number }} The rating definition.
+ *
+ * @param {number} score - The eco score from 0 to 100.
+ * @returns {{ id: string, label: string, min: number }} The rating definition object.
  */
 export function getRating(score) {
   const thresholds = Data.RATING_THRESHOLDS;
@@ -34,8 +42,9 @@ export function getRating(score) {
 
 /**
  * Compares an annual carbon footprint value with the global average benchmark.
- * @param {number} annual - Annual footprint in kg CO2e.
- * @returns {{ below: boolean, percent: number, text: string }} Comparison summary.
+ *
+ * @param {number} annual - Annual carbon footprint in kg CO2e.
+ * @returns {{ below: boolean, percent: number, text: string }} Comparison result summary.
  */
 export function compareToGlobalAverage(annual) {
   const avg = Data.BENCHMARKS.globalAverageAnnualKg;
@@ -44,6 +53,6 @@ export function compareToGlobalAverage(annual) {
   return {
     below,
     percent: Math.round(Math.abs(diffPercent)),
-    text: `${Math.round(Math.abs(diffPercent))}% ${below ? 'below' : 'above'} the global average`
+    text: `${Math.round(Math.abs(diffPercent))}% ${below ? "below" : "above"} the global average`,
   };
 }

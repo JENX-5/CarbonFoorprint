@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Animates a number counting up from its previous value to `value` over
@@ -11,11 +11,12 @@ export function useCountUp(value, duration = 900) {
   const rafRef = useRef(null);
 
   useEffect(() => {
-    const prefersReduced = typeof window !== 'undefined' &&
+    const prefersReduced =
+      typeof window !== "undefined" &&
       window.matchMedia &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (prefersReduced || typeof value !== 'number' || !isFinite(value)) {
+    if (prefersReduced || typeof value !== "number" || !isFinite(value)) {
       rafRef.current = requestAnimationFrame(() => {
         setDisplay(value);
         fromRef.current = value;

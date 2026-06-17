@@ -49,8 +49,8 @@ import {
   Mountain,
   PartyPopper,
   Settings,
-  Upload
-} from 'lucide-react';
+  Upload,
+} from "lucide-react";
 
 export const NAV_ICONS = {
   dashboard: LayoutDashboard,
@@ -58,7 +58,7 @@ export const NAV_ICONS = {
   insights: Sparkles,
   simulator: SlidersHorizontal,
   progress: Trophy,
-  learn: BookOpen
+  learn: BookOpen,
 };
 
 export const CATEGORY_ICONS = {
@@ -66,7 +66,7 @@ export const CATEGORY_ICONS = {
   electricity: Zap,
   diet: Utensils,
   waste: Trash2,
-  water: Droplet
+  water: Droplet,
 };
 
 export {
@@ -107,5 +107,5 @@ export {
   Utensils,
   Trash2,
   Droplet,
-  Upload
+  Upload,
 };

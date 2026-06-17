@@ -12,8 +12,8 @@
  *   isIn    -> threshold.indexOf(metrics[metric]) !== -1
  * ---------------------------------------------------------------------------
  */
-import { CarbonData as Data } from './data.js';
-import { getTodayKey, getYesterdayKey, getCurrentWeekKey } from './format.js';
+import { CarbonData as Data } from "./data.js";
+import { getTodayKey, getYesterdayKey, getCurrentWeekKey } from "./format.js";
 
 /**
  * Retrieves the level descriptor based on the current Eco Score.
@@ -57,8 +57,13 @@ export function getLevelProgress(ecoScore) {
   if (!next) return { current, next: null, percent: 100, pointsToNext: 0 };
   const span = next.min - current.min;
   const into = ecoScore - current.min;
-  const percent = span > 0 ? Math.round((into / span) * 100) : 100;
-  return { current, next, percent: Math.min(100, Math.max(0, percent)), pointsToNext: Math.max(0, next.min - ecoScore) };
+  const percent = Math.round((into / span) * 100);
+  return {
+    current,
+    next,
+    percent: Math.min(100, Math.max(0, percent)),
+    pointsToNext: Math.max(0, next.min - ecoScore),
+  };
 }
 
 /**
@@ -70,7 +75,7 @@ export function getLevelProgress(ecoScore) {
  */
 export function getCurrentChallenge() {
   const weekKey = getCurrentWeekKey();
-  const info = weekKey.split('-W');
+  const info = weekKey.split("-W");
   const weekNumber = Number(info[1]);
   const index = weekNumber % Data.CHALLENGES.length;
   return { weekKey, challenge: Data.CHALLENGES[index] };
@@ -78,21 +83,25 @@ export function getCurrentChallenge() {
 
 /**
  * Evaluates whether an achievement meets its target conditions.
+ *
  * @param {any} achievement - The achievement definition.
  * @param {any} metrics - The snapshot of user metrics.
  * @returns {boolean} True if the conditions are met, false otherwise.
  */
-function meetsCondition(achievement, metrics) {
+export function meetsCondition(achievement, metrics) {
   const value = metrics[achievement.metric];
   switch (achievement.comparator) {
-    case 'gte':
-      return typeof value === 'number' && value >= achievement.threshold;
-    case 'lte':
-      return typeof value === 'number' && value <= achievement.threshold;
-    case 'boolean':
+    case "gte":
+      return typeof value === "number" && value >= achievement.threshold;
+    case "lte":
+      return typeof value === "number" && value <= achievement.threshold;
+    case "boolean":
       return value === achievement.threshold;
-    case 'isIn':
-      return Array.isArray(achievement.threshold) && achievement.threshold.indexOf(value) !== -1;
+    case "isIn":
+      return (
+        Array.isArray(achievement.threshold) &&
+        achievement.threshold.indexOf(value) !== -1
+      );
     default:
       return false;
   }
@@ -105,8 +114,13 @@ function meetsCondition(achievement, metrics) {
  */
 export function buildMetricsSnapshot(state) {
   const todayKey = getTodayKey();
-  const checklistToday = state.checklist && state.checklist.date === todayKey ? state.checklist : null;
-  const completedToday = checklistToday ? Object.values(checklistToday.completed).filter(Boolean).length : 0;
+  const checklistToday =
+    state.checklist && state.checklist.date === todayKey
+      ? state.checklist
+      : null;
+  const completedToday = checklistToday
+    ? Object.values(checklistToday.completed).filter(Boolean).length
+    : 0;
 
   return {
     calculatorCompleted: !!state.calculatorCompleted,
@@ -116,9 +130,11 @@ export function buildMetricsSnapshot(state) {
     renewablePercent: state.inputs ? state.inputs.renewablePercent : 0,
     recycledPercent: state.inputs ? state.inputs.recycledPercent : 0,
     currentStreak: state.streak ? state.streak.current : 0,
-    weeklyChallengesCompleted: state.weeklyChallenge ? state.weeklyChallenge.completedWeeks.length : 0,
+    weeklyChallengesCompleted: state.weeklyChallenge
+      ? state.weeklyChallenge.completedWeeks.length
+      : 0,
     checklistAllCompletedToday: completedToday === Data.CHECKLIST_ITEMS.length,
-    ecoScore: state.ecoScore || 0
+    ecoScore: state.ecoScore || 0,
   };
 }
 
@@ -130,7 +146,9 @@ export function buildMetricsSnapshot(state) {
 export function evaluateNewAchievements(state) {
   const metrics = buildMetricsSnapshot(state);
   const unlocked = new Set(state.unlockedAchievements || []);
-  return Data.ACHIEVEMENTS.filter((a) => !unlocked.has(a.id) && meetsCondition(a, metrics));
+  return Data.ACHIEVEMENTS.filter(
+    (a) => !unlocked.has(a.id) && meetsCondition(a, metrics),
+  );
 }
 
 /**
@@ -143,10 +161,18 @@ export function evaluateNewAchievements(state) {
 export function applyAchievements(state) {
   const newly = evaluateNewAchievements(state);
   if (newly.length === 0) {
-    return { unlockedAchievements: state.unlockedAchievements, ecoScore: state.ecoScore, newlyUnlocked: [] };
+    return {
+      unlockedAchievements: state.unlockedAchievements,
+      ecoScore: state.ecoScore,
+      newlyUnlocked: [],
+    };
   }
-  const unlockedAchievements = [...state.unlockedAchievements, ...newly.map((a) => a.id)];
-  const ecoScore = state.ecoScore + newly.length * Data.ACTION_POINTS.achievementUnlock;
+  const unlockedAchievements = [
+    ...state.unlockedAchievements,
+    ...newly.map((a) => a.id),
+  ];
+  const ecoScore =
+    state.ecoScore + newly.length * Data.ACTION_POINTS.achievementUnlock;
   return { unlockedAchievements, ecoScore, newlyUnlocked: newly };
 }
 
@@ -190,7 +216,7 @@ export function toggleChecklistItem(state, itemId) {
       streak = {
         current,
         longest: Math.max(state.streak.longest, current),
-        lastActiveDate: todayKey
+        lastActiveDate: todayKey,
       };
     }
   }
@@ -199,7 +225,7 @@ export function toggleChecklistItem(state, itemId) {
     ...state,
     checklist: { date: todayKey, completed, awarded },
     ecoScore,
-    streak
+    streak,
   };
 }
 
@@ -214,8 +240,8 @@ export function completeWeeklyChallenge(state) {
   return {
     ...state,
     weeklyChallenge: {
-      completedWeeks: [...state.weeklyChallenge.completedWeeks, weekKey]
+      completedWeeks: [...state.weeklyChallenge.completedWeeks, weekKey],
     },
-    ecoScore: state.ecoScore + Data.ACTION_POINTS.weeklyChallenge
+    ecoScore: state.ecoScore + Data.ACTION_POINTS.weeklyChallenge,
   };
 }

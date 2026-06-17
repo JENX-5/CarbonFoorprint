@@ -12,7 +12,7 @@
  * component is what was missing: the actual SVG markup that uses them.
  * ---------------------------------------------------------------------------
  */
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 const SIZE = 180;
 const CENTER = SIZE / 2;
@@ -20,14 +20,19 @@ const RADIUS = 64;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 const RATING_COLOR_VAR = {
-  'rating-excellent': 'var(--color-canopy)',
-  'rating-good': 'var(--color-moss)',
-  'rating-fair': 'var(--color-sun)',
-  'rating-high': 'var(--color-clay)',
-  'rating-critical': 'var(--color-danger)'
+  "rating-excellent": "var(--color-canopy)",
+  "rating-good": "var(--color-moss)",
+  "rating-fair": "var(--color-sun)",
+  "rating-high": "var(--color-clay)",
+  "rating-critical": "var(--color-danger)",
 };
 
-export function ScoreRing({ score = 0, ratingClassName = 'rating-good', size = SIZE, animate = true }) {
+export function ScoreRing({
+  score = 0,
+  ratingClassName = "rating-good",
+  size = SIZE,
+  animate = true,
+}) {
   const target = Math.min(100, Math.max(0, score));
   const [drawnScore, setDrawnScore] = useState(animate ? 0 : target);
 
@@ -55,7 +60,7 @@ export function ScoreRing({ score = 0, ratingClassName = 'rating-good', size = S
   }, [target, animate]);
 
   const dashOffset = CIRCUMFERENCE * (1 - drawnScore / 100);
-  const color = RATING_COLOR_VAR[ratingClassName] || 'var(--color-canopy)';
+  const color = RATING_COLOR_VAR[ratingClassName] || "var(--color-canopy)";
 
   return (
     <div className="score-ring-wrap" style={{ width: size, height: size }}>
@@ -67,10 +72,27 @@ export function ScoreRing({ score = 0, ratingClassName = 'rating-good', size = S
         aria-label={`Eco score: ${Math.round(score)} out of 100`}
       >
         {/* decorative outer elevation lines, echoing the brand mark */}
-        <circle className="contour-ring contour-ring--1" cx={CENTER} cy={CENTER} r={RADIUS + 16} strokeDasharray="2 7" />
-        <circle className="contour-ring contour-ring--2" cx={CENTER} cy={CENTER} r={RADIUS + 10} strokeDasharray="1 5" />
+        <circle
+          className="contour-ring contour-ring--1"
+          cx={CENTER}
+          cy={CENTER}
+          r={RADIUS + 16}
+          strokeDasharray="2 7"
+        />
+        <circle
+          className="contour-ring contour-ring--2"
+          cx={CENTER}
+          cy={CENTER}
+          r={RADIUS + 10}
+          strokeDasharray="1 5"
+        />
         {/* gauge track */}
-        <circle className="score-ring__track" cx={CENTER} cy={CENTER} r={RADIUS} />
+        <circle
+          className="score-ring__track"
+          cx={CENTER}
+          cy={CENTER}
+          r={RADIUS}
+        />
         {/* gauge value */}
         <circle
           className="score-ring__progress"
@@ -80,7 +102,7 @@ export function ScoreRing({ score = 0, ratingClassName = 'rating-good', size = S
           stroke={color}
           strokeDasharray={CIRCUMFERENCE}
           strokeDashoffset={dashOffset}
-          style={!animate ? { transition: 'none' } : undefined}
+          style={!animate ? { transition: "none" } : undefined}
         />
       </svg>
       <div className="score-ring__text">

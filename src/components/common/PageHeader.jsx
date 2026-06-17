@@ -1,4 +1,10 @@
-export function PageHeader({ icon: Icon, eyebrow, title, description, actions }) {
+export function PageHeader({
+  icon: Icon,
+  eyebrow,
+  title,
+  description,
+  actions,
+}) {
   return (
     <div className="page-header">
       <div className="page-header__text">
@@ -11,7 +17,9 @@ export function PageHeader({ icon: Icon, eyebrow, title, description, actions })
           ) : null}
           {title}
         </h1>
-        {description ? <p className="page-header__desc">{description}</p> : null}
+        {description ? (
+          <p className="page-header__desc">{description}</p>
+        ) : null}
       </div>
       {actions ? <div className="page-header__actions">{actions}</div> : null}
     </div>

@@ -1,5 +1,3 @@
-
-
 export function BenchmarkBar({ annual }) {
   const maxScale = 10000;
   const percentage = Math.min((annual / maxScale) * 100, 100);
@@ -140,28 +138,42 @@ export function BenchmarkBar({ annual }) {
         </div>
       </div>
       <div className="benchmark-labels">
-        <span className="benchmark-label-item benchmark-label-item--start">0 kg</span>
+        <span className="benchmark-label-item benchmark-label-item--start">
+          0 kg
+        </span>
         <span className="benchmark-label-item benchmark-label-item--sust">
-          <strong>Sustainable</strong><br />1,500 kg
+          <strong>Sustainable</strong>
+          <br />
+          1,500 kg
         </span>
         <span className="benchmark-label-item benchmark-label-item--avg">
-          <strong>Global Avg</strong><br />4,700 kg
+          <strong>Global Avg</strong>
+          <br />
+          4,700 kg
         </span>
-        <span className="benchmark-label-item benchmark-label-item--end">10,000+ kg</span>
+        <span className="benchmark-label-item benchmark-label-item--end">
+          10,000+ kg
+        </span>
       </div>
 
       <div className="benchmark-summary">
         {annual <= sustainableTarget ? (
           <p>
-            Outstanding! Your footprint is below the sustainable target of {sustainableTarget.toLocaleString()} kg CO2e. You are living within safe planetary boundaries.
+            Outstanding! Your footprint is below the sustainable target of{" "}
+            {sustainableTarget.toLocaleString()} kg CO2e. You are living within
+            safe planetary boundaries.
           </p>
         ) : annual <= globalAverage ? (
           <p>
-            Good job! Your footprint is above the sustainable target but below the global average of {globalAverage.toLocaleString()} kg CO2e. Keep making improvements to reach the green zone.
+            Good job! Your footprint is above the sustainable target but below
+            the global average of {globalAverage.toLocaleString()} kg CO2e. Keep
+            making improvements to reach the green zone.
           </p>
         ) : (
           <p>
-            Alert: Your footprint is above the global average of {globalAverage.toLocaleString()} kg CO2e. Explore the **AI Insights** or **Scenario Simulator** to find impactful reductions.
+            Alert: Your footprint is above the global average of{" "}
+            {globalAverage.toLocaleString()} kg CO2e. Explore the **AI
+            Insights** or **Scenario Simulator** to find impactful reductions.
           </p>
         )}
       </div>

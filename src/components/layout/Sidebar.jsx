@@ -1,9 +1,14 @@
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { NAV_ITEMS } from '../../lib/navigation.js';
-import { BrandMark } from '../common/BrandMark.jsx';
-import { ChevronLeft, ChevronRight, Download, RotateCcw } from '../icons/index.jsx';
-import { useAppState } from '../../state/AppStateContext.jsx';
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
+import { NAV_ITEMS } from "../../lib/navigation.js";
+import { BrandMark } from "../common/BrandMark.jsx";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  RotateCcw,
+} from "../icons/index.jsx";
+import { useAppState } from "../../state/AppStateContext.jsx";
 
 export function Sidebar({ isOpen, onClose, collapsed, onToggleCollapsed }) {
   const { actions } = useAppState();
@@ -20,8 +25,16 @@ export function Sidebar({ isOpen, onClose, collapsed, onToggleCollapsed }) {
 
   return (
     <>
-      {isOpen ? <div className="sidebar-backdrop" onClick={onClose} aria-hidden="true" /> : null}
-      <aside className={`sidebar ${isOpen ? 'is-open' : ''} ${collapsed ? 'is-collapsed' : ''}`}>
+      {isOpen ? (
+        <div
+          className="sidebar-backdrop"
+          onClick={onClose}
+          aria-hidden="true"
+        />
+      ) : null}
+      <aside
+        className={`sidebar ${isOpen ? "is-open" : ""} ${collapsed ? "is-collapsed" : ""}`}
+      >
         <div className="sidebar__brand">
           <BrandMark size={30} />
           {!collapsed ? <span className="brand__text">Contour</span> : null}
@@ -35,11 +48,15 @@ export function Sidebar({ isOpen, onClose, collapsed, onToggleCollapsed }) {
                 <li key={item.id}>
                   <NavLink
                     to={item.path}
-                    className={({ isActive }) => `nav-btn ${isActive ? 'active' : ''}`}
+                    className={({ isActive }) =>
+                      `nav-btn ${isActive ? "active" : ""}`
+                    }
                     onClick={onClose}
                     title={collapsed ? item.label : undefined}
                   >
-                    <span className="icon" aria-hidden="true"><Icon size={18} /></span>
+                    <span className="icon" aria-hidden="true">
+                      <Icon size={18} />
+                    </span>
                     {!collapsed ? <span>{item.label}</span> : null}
                   </NavLink>
                 </li>
@@ -62,27 +79,32 @@ export function Sidebar({ isOpen, onClose, collapsed, onToggleCollapsed }) {
               </button>
               <button
                 type="button"
-                className={`sidebar__utility-collapsed-btn ${confirmingReset ? 'sidebar__utility-collapsed-btn--danger' : ''}`}
+                className={`sidebar__utility-collapsed-btn ${confirmingReset ? "sidebar__utility-collapsed-btn--danger" : ""}`}
                 onClick={handleReset}
                 onBlur={() => setConfirmingReset(false)}
-                title={confirmingReset ? 'Confirm reset?' : 'Reset data'}
-                aria-label={confirmingReset ? 'Confirm reset?' : 'Reset data'}
+                title={confirmingReset ? "Confirm reset?" : "Reset data"}
+                aria-label={confirmingReset ? "Confirm reset?" : "Reset data"}
               >
                 <RotateCcw size={15} aria-hidden="true" />
               </button>
             </div>
           ) : (
             <div className="sidebar__utility">
-              <button type="button" className="sidebar__utility-btn" onClick={actions.exportData}>
+              <button
+                type="button"
+                className="sidebar__utility-btn"
+                onClick={actions.exportData}
+              >
                 <Download size={15} aria-hidden="true" /> Export data
               </button>
               <button
                 type="button"
-                className={`sidebar__utility-btn ${confirmingReset ? 'sidebar__utility-btn--danger' : ''}`}
+                className={`sidebar__utility-btn ${confirmingReset ? "sidebar__utility-btn--danger" : ""}`}
                 onClick={handleReset}
                 onBlur={() => setConfirmingReset(false)}
               >
-                <RotateCcw size={15} aria-hidden="true" /> {confirmingReset ? 'Confirm reset?' : 'Reset data'}
+                <RotateCcw size={15} aria-hidden="true" />{" "}
+                {confirmingReset ? "Confirm reset?" : "Reset data"}
               </button>
             </div>
           )}
@@ -90,9 +112,13 @@ export function Sidebar({ isOpen, onClose, collapsed, onToggleCollapsed }) {
             type="button"
             className="sidebar__collapse-btn"
             onClick={onToggleCollapsed}
-            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            {collapsed ? <ChevronRight size={16} aria-hidden="true" /> : <ChevronLeft size={16} aria-hidden="true" />}
+            {collapsed ? (
+              <ChevronRight size={16} aria-hidden="true" />
+            ) : (
+              <ChevronLeft size={16} aria-hidden="true" />
+            )}
           </button>
         </div>
       </aside>

@@ -1,4 +1,3 @@
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,9 +7,9 @@ import {
   Title,
   Tooltip,
   Legend,
-  Filler
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
+  Filler,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
 
 ChartJS.register(
   CategoryScale,
@@ -20,25 +19,39 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
 );
 
 export function TrendChart({ history = [] }) {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark' || 
-                 (!document.documentElement.getAttribute('data-theme') && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const isDark =
+    document.documentElement.getAttribute("data-theme") === "dark" ||
+    (!document.documentElement.getAttribute("data-theme") &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches);
 
-  const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)';
-  const textColor = isDark ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)';
-  const chartColor = isDark ? '#e9c46a' : '#1b4332';
-  const chartFill = isDark ? 'rgba(233, 196, 106, 0.1)' : 'rgba(27, 67, 50, 0.12)';
+  const gridColor = isDark
+    ? "rgba(255, 255, 255, 0.08)"
+    : "rgba(0, 0, 0, 0.06)";
+  const textColor = isDark ? "rgba(255, 255, 255, 0.6)" : "rgba(0, 0, 0, 0.6)";
+  const chartColor = isDark ? "#e9c46a" : "#1b4332";
+  const chartFill = isDark
+    ? "rgba(233, 196, 106, 0.1)"
+    : "rgba(27, 67, 50, 0.12)";
 
   // Format dates nicely
   const formatDate = (isoString) => {
     try {
       const date = new Date(isoString);
-      return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', '');
+      return date
+        .toLocaleDateString(undefined, {
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+        .replace(",", "");
     } catch {
-      return 'Unknown';
+      return "Unknown";
     }
   };
 
@@ -46,7 +59,7 @@ export function TrendChart({ history = [] }) {
     labels: history.map((entry) => formatDate(entry.date)),
     datasets: [
       {
-        label: 'Annual Footprint',
+        label: "Annual Footprint",
         data: history.map((entry) => entry.annual),
         borderColor: chartColor,
         backgroundColor: chartFill,
@@ -54,12 +67,12 @@ export function TrendChart({ history = [] }) {
         tension: 0.35,
         fill: true,
         pointBackgroundColor: chartColor,
-        pointBorderColor: isDark ? '#1f2723' : '#ffffff',
+        pointBorderColor: isDark ? "#1f2723" : "#ffffff",
         pointBorderWidth: 1.5,
         pointRadius: 4,
         pointHoverRadius: 6,
-      }
-    ]
+      },
+    ],
   };
 
   const options = {
@@ -67,66 +80,89 @@ export function TrendChart({ history = [] }) {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false
+        display: false,
       },
       tooltip: {
-        backgroundColor: isDark ? '#1a1f1c' : '#ffffff',
-        titleColor: isDark ? '#ffffff' : '#1b4332',
-        bodyColor: isDark ? '#e0e0e0' : '#4a534d',
-        borderColor: '#1b4332',
+        backgroundColor: isDark ? "#1a1f1c" : "#ffffff",
+        titleColor: isDark ? "#ffffff" : "#1b4332",
+        bodyColor: isDark ? "#e0e0e0" : "#4a534d",
+        borderColor: "#1b4332",
         borderWidth: 1,
         padding: 10,
         cornerRadius: 6,
         displayColors: false,
         callbacks: {
-          label: (context) => ` ${context.raw.toLocaleString()} kg CO2e / yr`
-        }
-      }
+          label: (context) => ` ${context.raw.toLocaleString()} kg CO2e / yr`,
+        },
+      },
     },
     scales: {
       x: {
         grid: {
-          display: false
+          display: false,
         },
         ticks: {
           color: textColor,
           font: {
             size: 10,
-            family: 'system-ui, sans-serif'
+            family: "system-ui, sans-serif",
           },
           maxRotation: 45,
-          minRotation: 0
-        }
+          minRotation: 0,
+        },
       },
       y: {
         grid: {
-          color: gridColor
+          color: gridColor,
         },
         ticks: {
           color: textColor,
           font: {
             size: 10,
-            family: 'system-ui, sans-serif'
+            family: "system-ui, sans-serif",
           },
-          callback: (value) => `${value} kg`
-        }
-      }
-    }
+          callback: (value) => `${value} kg`,
+        },
+      },
+    },
   };
 
   if (!history || history.length < 2) {
     return (
-      <div className="empty-state" style={{ height: '250px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', gap: '0.5rem' }}>
-        <p style={{ margin: 0, fontWeight: 600, color: 'var(--color-charcoal)' }}>Waiting for more data...</p>
-        <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--color-charcoal-soft)', textAlign: 'center' }}>
-          Your baseline footprint is recorded. Recalculate or apply a scenario in the simulator to see your carbon trend over time.
+      <div
+        className="empty-state"
+        style={{
+          height: "250px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "1.5rem",
+          gap: "0.5rem",
+        }}
+      >
+        <p
+          style={{ margin: 0, fontWeight: 600, color: "var(--color-charcoal)" }}
+        >
+          Waiting for more data...
+        </p>
+        <p
+          style={{
+            margin: 0,
+            fontSize: "0.85rem",
+            color: "var(--color-charcoal-soft)",
+            textAlign: "center",
+          }}
+        >
+          Your baseline footprint is recorded. Recalculate or apply a scenario
+          in the simulator to see your carbon trend over time.
         </p>
       </div>
     );
   }
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '250px' }}>
+    <div style={{ position: "relative", width: "100%", height: "250px" }}>
       <Line data={chartData} options={options} />
     </div>
   );

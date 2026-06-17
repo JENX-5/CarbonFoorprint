@@ -1,16 +1,16 @@
-import { useState } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
-import { SkipLink } from './SkipLink.jsx';
-import { Sidebar } from './Sidebar.jsx';
-import { Topbar } from './Topbar.jsx';
+import { useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import { SkipLink } from "./SkipLink.jsx";
+import { Sidebar } from "./Sidebar.jsx";
+import { Topbar } from "./Topbar.jsx";
 
-const COLLAPSE_KEY = 'contourSidebarCollapsed';
+const COLLAPSE_KEY = "contourSidebarCollapsed";
 
 export function AppShell() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(() => {
     try {
-      return window.localStorage.getItem(COLLAPSE_KEY) === '1';
+      return window.localStorage.getItem(COLLAPSE_KEY) === "1";
     } catch {
       return false;
     }
@@ -26,7 +26,7 @@ export function AppShell() {
     setCollapsed((prev) => {
       const next = !prev;
       try {
-        window.localStorage.setItem(COLLAPSE_KEY, next ? '1' : '0');
+        window.localStorage.setItem(COLLAPSE_KEY, next ? "1" : "0");
       } catch {
         /* ignore */
       }

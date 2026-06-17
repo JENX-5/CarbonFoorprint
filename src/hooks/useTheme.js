@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 /**
  * Applies `theme` ('light' | 'dark' | 'system') to <html data-theme="...">.
@@ -11,18 +11,18 @@ export function useTheme(theme) {
     const root = document.documentElement;
 
     function applySystem() {
-      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      root.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      root.setAttribute("data-theme", isDark ? "dark" : "light");
     }
 
-    if (theme === 'system') {
+    if (theme === "system") {
       applySystem();
-      const mq = window.matchMedia('(prefers-color-scheme: dark)');
-      mq.addEventListener('change', applySystem);
-      return () => mq.removeEventListener('change', applySystem);
+      const mq = window.matchMedia("(prefers-color-scheme: dark)");
+      mq.addEventListener("change", applySystem);
+      return () => mq.removeEventListener("change", applySystem);
     }
 
-    root.setAttribute('data-theme', theme);
+    root.setAttribute("data-theme", theme);
     return undefined;
   }, [theme]);
 }

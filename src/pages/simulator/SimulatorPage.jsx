@@ -1,26 +1,31 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAppState } from '../../state/AppStateContext.jsx';
-import { useDocumentTitle } from '../../hooks/useDocumentTitle.js';
-import { PageHeader } from '../../components/common/PageHeader.jsx';
-import { SlidersHorizontal, TreePine, Route, Check } from '../../components/icons/index.jsx';
-import { EmptyState } from '../../components/common/EmptyState.jsx';
-import { Button } from '../../components/common/Button.jsx';
-import { CarbonData as Data } from '../../lib/data.js';
-import { runSimulation } from '../../lib/simulatorEngine.js';
-import { formatNumber } from '../../lib/format.js';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppState } from "../../state/AppStateContext.jsx";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle.js";
+import { PageHeader } from "../../components/common/PageHeader.jsx";
+import {
+  SlidersHorizontal,
+  TreePine,
+  Route,
+  Check,
+} from "../../components/icons/index.jsx";
+import { EmptyState } from "../../components/common/EmptyState.jsx";
+import { Button } from "../../components/common/Button.jsx";
+import { CarbonData as Data } from "../../lib/data.js";
+import { runSimulation } from "../../lib/simulatorEngine.js";
+import { formatNumber } from "../../lib/format.js";
 
 export function SimulatorPage() {
   const { state, actions } = useAppState();
-  useDocumentTitle('Scenario Simulator');
+  useDocumentTitle("Scenario Simulator");
   const navigate = useNavigate();
 
   // Initialize sliders based on existing state inputs if they exist
   const [sliders, setSliders] = useState(() => ({
     driveLessPercent: 0,
     renewableTarget: state.inputs?.renewablePercent || 0,
-    dietTarget: state.inputs?.dietType || 'mediumMeat',
-    wasteReducePercent: 0
+    dietTarget: state.inputs?.dietType || "mediumMeat",
+    wasteReducePercent: 0,
   }));
 
   if (!state.results || !state.inputs) {
@@ -40,31 +45,45 @@ export function SimulatorPage() {
   const handleSliderChange = (field, value) => {
     const nextSliders = { ...sliders, [field]: value };
     setSliders(nextSliders);
-    
+
     // Dispatch run simulator action to award points if first time
     if (!state.simulatorRun) {
       actions.runSimulator();
     }
   };
 
-  const simResult = runSimulation(state.inputs, state.results.byCategoryAnnual, sliders);
+  const simResult = runSimulation(
+    state.inputs,
+    state.results.byCategoryAnnual,
+    sliders,
+  );
 
   const handleApplyScenario = () => {
     const newInputs = {
       ...state.inputs,
-      commuteKmPerDay: Number((state.inputs.commuteKmPerDay * (1 - sliders.driveLessPercent / 100)).toFixed(1)),
+      commuteKmPerDay: Number(
+        (
+          state.inputs.commuteKmPerDay *
+          (1 - sliders.driveLessPercent / 100)
+        ).toFixed(1),
+      ),
       renewablePercent: Number(sliders.renewableTarget),
       dietType: sliders.dietTarget,
-      wasteKgPerWeek: Number((state.inputs.wasteKgPerWeek * (1 - sliders.wasteReducePercent / 100)).toFixed(1)),
+      wasteKgPerWeek: Number(
+        (
+          state.inputs.wasteKgPerWeek *
+          (1 - sliders.wasteReducePercent / 100)
+        ).toFixed(1),
+      ),
     };
     const newResults = {
       annual: simResult.newTotal,
       monthly: simResult.newTotal / 12,
       daily: simResult.newTotal / 365,
-      byCategoryAnnual: simResult.byCategory
+      byCategoryAnnual: simResult.byCategory,
     };
     actions.applyScenario(newInputs, newResults);
-    navigate('/dashboard');
+    navigate("/dashboard");
   };
 
   return (
@@ -180,53 +199,84 @@ export function SimulatorPage() {
 
       <div className="simulator-layout">
         <div className="slider-card">
-          <h3 style={{ marginBottom: '2rem', fontSize: '1.2rem' }}>Adjust Scenario Sliders</h3>
+          <h3 style={{ marginBottom: "2rem", fontSize: "1.2rem" }}>
+            Adjust Scenario Sliders
+          </h3>
 
           <div className="slider-group">
             <div className="slider-header">
-              <label>Reduce driving distance</label>
-              <span className="slider-value">{sliders.driveLessPercent}% less</span>
+              <label htmlFor="slider-drive-less">Reduce driving distance</label>
+              <span className="slider-value">
+                {sliders.driveLessPercent}% less
+              </span>
             </div>
             <input
+              id="slider-drive-less"
               type="range"
               min="0"
               max="100"
               step="5"
               value={sliders.driveLessPercent}
-              onChange={(e) => handleSliderChange('driveLessPercent', Number(e.target.value))}
+              onChange={(e) =>
+                handleSliderChange("driveLessPercent", Number(e.target.value))
+              }
               className="range-input"
             />
-            <p style={{ margin: '0.25rem 0 0', fontSize: '0.82rem', color: 'var(--color-charcoal-soft)' }}>
-              Avoid trips, work from home, walk, or cycle to lower transport emissions.
+            <p
+              style={{
+                margin: "0.25rem 0 0",
+                fontSize: "0.82rem",
+                color: "var(--color-charcoal-soft)",
+              }}
+            >
+              Avoid trips, work from home, walk, or cycle to lower transport
+              emissions.
             </p>
           </div>
 
           <div className="slider-group">
             <div className="slider-header">
-              <label>Renewable electricity share</label>
-              <span className="slider-value">{sliders.renewableTarget}% share</span>
+              <label htmlFor="slider-renewable-target">
+                Renewable electricity share
+              </label>
+              <span className="slider-value">
+                {sliders.renewableTarget}% share
+              </span>
             </div>
             <input
+              id="slider-renewable-target"
               type="range"
               min="0"
               max="100"
               step="5"
               value={sliders.renewableTarget}
-              onChange={(e) => handleSliderChange('renewableTarget', Number(e.target.value))}
+              onChange={(e) =>
+                handleSliderChange("renewableTarget", Number(e.target.value))
+              }
               className="range-input"
             />
-            <p style={{ margin: '0.25rem 0 0', fontSize: '0.82rem', color: 'var(--color-charcoal-soft)' }}>
-              Increase your household electricity coming from solar panels or clean energy providers.
+            <p
+              style={{
+                margin: "0.25rem 0 0",
+                fontSize: "0.82rem",
+                color: "var(--color-charcoal-soft)",
+              }}
+            >
+              Increase your household electricity coming from solar panels or
+              clean energy providers.
             </p>
           </div>
 
           <div className="slider-group">
             <div className="slider-header">
-              <label>Dietary patterns change</label>
+              <label htmlFor="slider-diet-target">
+                Dietary patterns change
+              </label>
             </div>
             <select
+              id="slider-diet-target"
               value={sliders.dietTarget}
-              onChange={(e) => handleSliderChange('dietTarget', e.target.value)}
+              onChange={(e) => handleSliderChange("dietTarget", e.target.value)}
               className="select-input"
             >
               {Object.entries(Data.DIET_LABELS).map(([key, label]) => (
@@ -235,26 +285,44 @@ export function SimulatorPage() {
                 </option>
               ))}
             </select>
-            <p style={{ margin: '0.25rem 0 0', fontSize: '0.82rem', color: 'var(--color-charcoal-soft)' }}>
-              Switch to lower carbon footprint meal plans (e.g. vegetarian, low meat, or vegan).
+            <p
+              style={{
+                margin: "0.25rem 0 0",
+                fontSize: "0.82rem",
+                color: "var(--color-charcoal-soft)",
+              }}
+            >
+              Switch to lower carbon footprint meal plans (e.g. vegetarian, low
+              meat, or vegan).
             </p>
           </div>
 
           <div className="slider-group" style={{ marginBottom: 0 }}>
             <div className="slider-header">
-              <label>Waste reduction</label>
-              <span className="slider-value">{sliders.wasteReducePercent}% less</span>
+              <label htmlFor="slider-waste-reduce">Waste reduction</label>
+              <span className="slider-value">
+                {sliders.wasteReducePercent}% less
+              </span>
             </div>
             <input
+              id="slider-waste-reduce"
               type="range"
               min="0"
               max="100"
               step="5"
               value={sliders.wasteReducePercent}
-              onChange={(e) => handleSliderChange('wasteReducePercent', Number(e.target.value))}
+              onChange={(e) =>
+                handleSliderChange("wasteReducePercent", Number(e.target.value))
+              }
               className="range-input"
             />
-            <p style={{ margin: '0.25rem 0 0', fontSize: '0.82rem', color: 'var(--color-charcoal-soft)' }}>
+            <p
+              style={{
+                margin: "0.25rem 0 0",
+                fontSize: "0.82rem",
+                color: "var(--color-charcoal-soft)",
+              }}
+            >
               Generate less waste or recycle/compost a larger portion.
             </p>
           </div>
@@ -262,24 +330,50 @@ export function SimulatorPage() {
 
         <div className="results-card">
           <div className="projection-header">
-            <h3 style={{ color: '#ffffff', margin: 0, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <h3
+              style={{
+                color: "#ffffff",
+                margin: 0,
+                fontSize: "0.9rem",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+              }}
+            >
               Projected Annual Footprint
             </h3>
-            <p className="big-projection">{formatNumber(simResult.newTotal, 0)} kg CO2e</p>
+            <p className="big-projection">
+              {formatNumber(simResult.newTotal, 0)} kg CO2e
+            </p>
             <p className="baseline-comparison">
               {simResult.savedKg > 0 ? (
                 <>
-                  Saves <strong>{formatNumber(simResult.savedKg, 0)} kg CO2e / year</strong> (~{Math.round((simResult.savedKg / simResult.baselineTotal) * 100)}% reduction)
+                  Saves{" "}
+                  <strong>
+                    {formatNumber(simResult.savedKg, 0)} kg CO2e / year
+                  </strong>{" "}
+                  (~
+                  {Math.round(
+                    (simResult.savedKg / simResult.baselineTotal) * 100,
+                  )}
+                  % reduction)
                 </>
               ) : (
-                'No changes from current baseline.'
+                "No changes from current baseline."
               )}
             </p>
           </div>
 
           {simResult.savedKg > 0 && (
             <div className="projections-equivalent">
-              <h4 style={{ color: '#ffffff', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>
+              <h4
+                style={{
+                  color: "#ffffff",
+                  fontSize: "0.85rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  marginBottom: "1rem",
+                }}
+              >
                 Equivalent Carbon Savings
               </h4>
 
@@ -288,7 +382,11 @@ export function SimulatorPage() {
                   <TreePine size={20} />
                 </div>
                 <p className="equivalent-text">
-                  Equivalent to planting <strong>{formatNumber(simResult.equivalentTrees, 0)} trees</strong> absorbing carbon for a whole year.
+                  Equivalent to planting{" "}
+                  <strong>
+                    {formatNumber(simResult.equivalentTrees, 0)} trees
+                  </strong>{" "}
+                  absorbing carbon for a whole year.
                 </p>
               </div>
 
@@ -297,7 +395,11 @@ export function SimulatorPage() {
                   <Route size={20} />
                 </div>
                 <p className="equivalent-text">
-                  Equivalent to driving <strong>{formatNumber(simResult.equivalentKm, 0)} fewer kilometers</strong> in an average gasoline car.
+                  Equivalent to driving{" "}
+                  <strong>
+                    {formatNumber(simResult.equivalentKm, 0)} fewer kilometers
+                  </strong>{" "}
+                  in an average gasoline car.
                 </p>
               </div>
 
@@ -306,16 +408,16 @@ export function SimulatorPage() {
                 icon={Check}
                 onClick={handleApplyScenario}
                 style={{
-                  width: '100%',
-                  marginTop: '1rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem',
-                  background: 'var(--color-sun)',
-                  color: 'var(--color-canopy-dark)',
-                  border: 'none',
-                  fontWeight: 700
+                  width: "100%",
+                  marginTop: "1rem",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "0.5rem",
+                  background: "var(--color-sun)",
+                  color: "var(--color-canopy-dark)",
+                  border: "none",
+                  fontWeight: 700,
                 }}
               >
                 Apply Scenario as Dashboard Baseline

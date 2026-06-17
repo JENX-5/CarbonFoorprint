@@ -5,7 +5,13 @@
  */
 export function BrandMark({ size = 34 }) {
   return (
-    <svg className="brand__mark" width={size} height={size} viewBox="0 0 40 40" aria-hidden="true">
+    <svg
+      className="brand__mark"
+      width={size}
+      height={size}
+      viewBox="0 0 40 40"
+      aria-hidden="true"
+    >
       <path
         className="contour-ring contour-ring--1"
         d="M20 6 C 28 6, 34 12.5, 34 20 C 34 27.5, 28 34, 20 34 C 11.5 34, 6 28, 6 20 C 6 12, 12 6, 20 6 Z"

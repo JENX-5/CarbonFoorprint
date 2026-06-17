@@ -1,4 +1,4 @@
-import { CarbonData as Data } from '../../lib/data.js';
+import { CarbonData as Data } from "../../lib/data.js";
 import {
   Lock,
   Leaf,
@@ -11,8 +11,8 @@ import {
   Trophy,
   CircleCheck,
   TreePine,
-  Award
-} from '../icons/index.jsx';
+  Award,
+} from "../icons/index.jsx";
 
 const ACHIEVEMENT_ICONS = {
   firstCalculation: Leaf,
@@ -24,7 +24,7 @@ const ACHIEVEMENT_ICONS = {
   weekWarrior: Flame,
   challengeChampion: Trophy,
   checklistPro: CircleCheck,
-  forestGuardian: TreePine
+  forestGuardian: TreePine,
 };
 
 export function AchievementsGrid({ unlockedAchievements }) {
@@ -36,14 +36,17 @@ export function AchievementsGrid({ unlockedAchievements }) {
         const unlocked = unlockedSet.has(achievement.id);
         const Icon = ACHIEVEMENT_ICONS[achievement.id] || Award;
         return (
-          <li key={achievement.id} className={`badge ${unlocked ? '' : 'badge--locked'}`}>
+          <li
+            key={achievement.id}
+            className={`badge ${unlocked ? "" : "badge--locked"}`}
+          >
             <span className="badge__icon" aria-hidden="true">
               {unlocked ? <Icon size={24} /> : <Lock size={20} />}
             </span>
             <div>
               <p className="badge__title">{achievement.title}</p>
               <p className="badge__desc">{achievement.description}</p>
-              <p className="badge__state">{unlocked ? 'Unlocked' : 'Locked'}</p>
+              <p className="badge__state">{unlocked ? "Unlocked" : "Locked"}</p>
             </div>
           </li>
         );

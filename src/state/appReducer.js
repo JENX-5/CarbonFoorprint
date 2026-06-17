@@ -9,9 +9,17 @@
  * place no matter which action triggered it.
  * ---------------------------------------------------------------------------
  */
-import { defaultState, pushHistoryEntry } from '../lib/storage.js';
-import { applyAchievements, toggleChecklistItem, completeWeeklyChallenge } from '../lib/gamification.js';
-import { CarbonData as Data } from '../lib/data.js';
+import {
+  defaultState,
+  pushHistoryEntry,
+  sanitizeState,
+} from "../lib/storage.js";
+import {
+  applyAchievements,
+  toggleChecklistItem,
+  completeWeeklyChallenge,
+} from "../lib/gamification.js";
+import { CarbonData as Data } from "../lib/data.js";
 
 /**
  * Wraps state update and applies any achievements that are newly earned.
@@ -19,11 +27,10 @@ import { CarbonData as Data } from '../lib/data.js';
  * @returns {{ next: any, newlyUnlocked: any[] }} The state with achievements applied and newly unlocked list.
  */
 function withAchievements(state) {
-  const { unlockedAchievements, ecoScore, newlyUnlocked } = applyAchievements(state);
+  const { unlockedAchievements, ecoScore, newlyUnlocked } =
+    applyAchievements(state);
   return { next: { ...state, unlockedAchievements, ecoScore }, newlyUnlocked };
 }
-
-export const initialActionResult = (state) => ({ state, newlyUnlocked: [], events: [] });
 
 /**
  * Global application state reducer.
@@ -33,7 +40,7 @@ export const initialActionResult = (state) => ({ state, newlyUnlocked: [], event
  */
 export function appReducer(state, action) {
   switch (action.type) {
-    case 'CALCULATE': {
+    case "CALCULATE": {
       const { inputs, results } = action.payload;
       const isFirstEver = !state.calculatorCompleted;
       let next = {
@@ -41,58 +48,91 @@ export function appReducer(state, action) {
         inputs,
         results,
         calculatorCompleted: true,
-        firstBaselineAnnual: state.firstBaselineAnnual === null ? results.annual : state.firstBaselineAnnual,
-        ecoScore: isFirstEver ? state.ecoScore + Data.ACTION_POINTS.calculatorCompleted : state.ecoScore,
-        history: pushHistoryEntry(state.history, results)
+        firstBaselineAnnual:
+          state.firstBaselineAnnual === null
+            ? results.annual
+            : state.firstBaselineAnnual,
+        ecoScore: isFirstEver
+          ? state.ecoScore + Data.ACTION_POINTS.calculatorCompleted
+          : state.ecoScore,
+        history: pushHistoryEntry(state.history, results),
       };
       const { next: withA, newlyUnlocked } = withAchievements(next);
-      return { ...withA, _meta: { newlyUnlocked, event: isFirstEver ? 'first-calculation' : 'recalculated' } };
+      return {
+        ...withA,
+        _meta: {
+          newlyUnlocked,
+          event: isFirstEver ? "first-calculation" : "recalculated",
+        },
+      };
     }
 
-    case 'RUN_SIMULATOR': {
+    case "RUN_SIMULATOR": {
       const isFirstEver = !state.simulatorRun;
       let next = {
         ...state,
         simulatorRun: true,
-        ecoScore: isFirstEver ? state.ecoScore + Data.ACTION_POINTS.simulatorRun : state.ecoScore
+        ecoScore: isFirstEver
+          ? state.ecoScore + Data.ACTION_POINTS.simulatorRun
+          : state.ecoScore,
       };
       const { next: withA, newlyUnlocked } = withAchievements(next);
-      return { ...withA, _meta: { newlyUnlocked, event: isFirstEver ? 'first-simulation' : null } };
+      return {
+        ...withA,
+        _meta: {
+          newlyUnlocked,
+          event: isFirstEver ? "first-simulation" : null,
+        },
+      };
     }
 
-    case 'APPLY_SCENARIO': {
+    case "APPLY_SCENARIO": {
       const { inputs, results } = action.payload;
       let next = {
         ...state,
         inputs,
         results,
-        history: pushHistoryEntry(state.history, results)
+        history: pushHistoryEntry(state.history, results),
       };
       const { next: withA, newlyUnlocked } = withAchievements(next);
-      return { ...withA, _meta: { newlyUnlocked, event: 'scenario-applied' } };
+      return { ...withA, _meta: { newlyUnlocked, event: "scenario-applied" } };
     }
 
-    case 'TOGGLE_CHECKLIST_ITEM': {
+    case "TOGGLE_CHECKLIST_ITEM": {
       const toggled = toggleChecklistItem(state, action.payload.itemId);
       const { next: withA, newlyUnlocked } = withAchievements(toggled);
-      return { ...withA, _meta: { newlyUnlocked, event: 'checklist-toggled' } };
+      return { ...withA, _meta: { newlyUnlocked, event: "checklist-toggled" } };
     }
 
-    case 'COMPLETE_WEEKLY_CHALLENGE': {
+    case "COMPLETE_WEEKLY_CHALLENGE": {
       const updated = completeWeeklyChallenge(state);
-      if (updated === state) return { ...state, _meta: { newlyUnlocked: [], event: null } };
+      if (updated === state)
+        return { ...state, _meta: { newlyUnlocked: [], event: null } };
       const { next: withA, newlyUnlocked } = withAchievements(updated);
-      return { ...withA, _meta: { newlyUnlocked, event: 'challenge-completed' } };
+      return {
+        ...withA,
+        _meta: { newlyUnlocked, event: "challenge-completed" },
+      };
     }
 
-    case 'SET_THEME':
-      return { ...state, theme: action.payload.theme, _meta: { newlyUnlocked: [], event: null } };
+    case "SET_THEME":
+      return {
+        ...state,
+        theme: action.payload.theme,
+        _meta: { newlyUnlocked: [], event: null },
+      };
 
-    case 'RESET_ALL':
-      return { ...defaultState(), _meta: { newlyUnlocked: [], event: 'reset' } };
+    case "RESET_ALL":
+      return {
+        ...defaultState(),
+        _meta: { newlyUnlocked: [], event: "reset" },
+      };
 
-    case 'IMPORT_STATE':
-      return { ...defaultState(), ...action.payload.state, _meta: { newlyUnlocked: [], event: 'imported' } };
+    case "IMPORT_STATE":
+      return {
+        ...sanitizeState(action.payload.state),
+        _meta: { newlyUnlocked: [], event: "imported" },
+      };
 
     default:
       return state;

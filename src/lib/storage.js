@@ -10,22 +10,24 @@
  * ---------------------------------------------------------------------------
  */
 
-import { Logger } from './logger.js';
+import { Logger } from "./logger.js";
 
-export const STORAGE_KEY = 'contourCarbonAppState_v2';
-const LEGACY_STORAGE_KEY = 'contourCarbonAppState_v1';
+export const STORAGE_KEY = "contourCarbonAppState_v2";
+const LEGACY_STORAGE_KEY = "contourCarbonAppState_v1";
 export const MAX_HISTORY_ENTRIES = 24;
 
 export const Storage = {
   load() {
     try {
-      const raw = window.localStorage.getItem(STORAGE_KEY) || window.localStorage.getItem(LEGACY_STORAGE_KEY);
+      const raw =
+        window.localStorage.getItem(STORAGE_KEY) ||
+        window.localStorage.getItem(LEGACY_STORAGE_KEY);
       if (!raw) return null;
       const parsed = JSON.parse(raw);
-      if (typeof parsed !== 'object' || parsed === null) return null;
+      if (typeof parsed !== "object" || parsed === null) return null;
       return parsed;
     } catch (error) {
-      Logger.error('Failed to load application state from storage', error);
+      Logger.error("Failed to load application state from storage", error);
       return null;
     }
   },
@@ -34,7 +36,7 @@ export const Storage = {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       return true;
     } catch (error) {
-      Logger.error('Failed to save application state to storage', error);
+      Logger.error("Failed to save application state to storage", error);
       return false;
     }
   },
@@ -44,10 +46,10 @@ export const Storage = {
       window.localStorage.removeItem(LEGACY_STORAGE_KEY);
       return true;
     } catch (error) {
-      Logger.error('Failed to clear application state from storage', error);
+      Logger.error("Failed to clear application state from storage", error);
       return false;
     }
-  }
+  },
 };
 
 export function defaultState() {
@@ -63,33 +65,54 @@ export function defaultState() {
     streak: { current: 0, longest: 0, lastActiveDate: null },
     weeklyChallenge: { completedWeeks: [] },
     history: [],
-    theme: 'system'
+    theme: "system",
   };
 }
 
-export function loadState() {
+export function sanitizeState(parsed) {
   const base = defaultState();
-  const parsed = Storage.load();
-  if (!parsed) return base;
+  if (!parsed || typeof parsed !== "object") return base;
   try {
     return {
       inputs: parsed.inputs || base.inputs,
       results: parsed.results || base.results,
       calculatorCompleted: !!parsed.calculatorCompleted,
       simulatorRun: !!parsed.simulatorRun,
-      firstBaselineAnnual: typeof parsed.firstBaselineAnnual === 'number' ? parsed.firstBaselineAnnual : base.firstBaselineAnnual,
-      ecoScore: typeof parsed.ecoScore === 'number' && isFinite(parsed.ecoScore) ? parsed.ecoScore : 0,
-      unlockedAchievements: Array.isArray(parsed.unlockedAchievements) ? parsed.unlockedAchievements : [],
+      firstBaselineAnnual:
+        typeof parsed.firstBaselineAnnual === "number"
+          ? parsed.firstBaselineAnnual
+          : base.firstBaselineAnnual,
+      ecoScore:
+        typeof parsed.ecoScore === "number" && isFinite(parsed.ecoScore)
+          ? parsed.ecoScore
+          : 0,
+      unlockedAchievements: Array.isArray(parsed.unlockedAchievements)
+        ? parsed.unlockedAchievements
+        : [],
       checklist: Object.assign({}, base.checklist, parsed.checklist || {}),
       streak: Object.assign({}, base.streak, parsed.streak || {}),
-      weeklyChallenge: Object.assign({}, base.weeklyChallenge, parsed.weeklyChallenge || {}),
-      history: Array.isArray(parsed.history) ? parsed.history.slice(-MAX_HISTORY_ENTRIES) : base.history,
-      theme: parsed.theme === 'light' || parsed.theme === 'dark' ? parsed.theme : base.theme
+      weeklyChallenge: Object.assign(
+        {},
+        base.weeklyChallenge,
+        parsed.weeklyChallenge || {},
+      ),
+      history: Array.isArray(parsed.history)
+        ? parsed.history.slice(-MAX_HISTORY_ENTRIES)
+        : base.history,
+      theme:
+        parsed.theme === "light" || parsed.theme === "dark"
+          ? parsed.theme
+          : base.theme,
     };
   } catch (error) {
-    Logger.error('Error migrating or parsing loaded state', error);
+    Logger.error("Error migrating or parsing loaded state", error);
     return base;
   }
+}
+
+export function loadState() {
+  const parsed = Storage.load();
+  return sanitizeState(parsed);
 }
 
 /** Appends a calculation snapshot to history, keeping only the most recent entries. */
@@ -97,7 +120,7 @@ export function pushHistoryEntry(history, results) {
   const entry = {
     date: new Date().toISOString(),
     annual: results.annual,
-    byCategoryAnnual: results.byCategoryAnnual
+    byCategoryAnnual: results.byCategoryAnnual,
   };
   return [...history, entry].slice(-MAX_HISTORY_ENTRIES);
 }

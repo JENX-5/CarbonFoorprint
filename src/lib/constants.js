@@ -4,7 +4,7 @@
  * This module re-exports emission factors and default inputs from the existing data module
  * to avoid duplication while providing a single import location for other code.
  */
-import { CarbonData as Data } from './data.js';
+import { CarbonData as Data } from "./data.js";
 
 export const EMISSION_FACTORS = Data.EMISSION_FACTORS;
 
@@ -18,7 +18,7 @@ export const DEFAULT_INPUTS = {
   wasteKgPerWeek: 8,
   recycledPercent: 30,
   waterLitersPerDay: 150,
-  vehicleType: 'petrolCar',
-  dietType: 'mediumMeat',
-  waterHeatedMostly: false
+  vehicleType: "petrolCar",
+  dietType: "mediumMeat",
+  waterHeatedMostly: false,
 };
