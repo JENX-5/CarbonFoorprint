@@ -304,5 +304,98 @@ export const Gamification = {
       var weekKey = info.isoYear + '-W' + Utils.pad2(info.week);
       var index = info.week % Data.CHALLENGES.length;
       return { weekKey: weekKey, challenge: Data.CHALLENGES[index] };
+    },
+    addPoints: function (state, amount) {
+      state.ecoScore = Math.max(0, state.ecoScore + amount);
+    },
+    allChecklistItemsCompletedToday: function (state) {
+      return Data.CHECKLIST_ITEMS.every(function (item) {
+        return !!state.checklist.completed[item.id];
+      });
+    },
+    buildMetrics: function (state) {
+      return {
+        calculatorCompleted: !!state.calculatorCompleted,
+        simulatorRun: !!state.simulatorRun,
+        annualTotal: state.results ? state.results.annual : Number.POSITIVE_INFINITY,
+        dietType: state.inputs ? state.inputs.dietType : null,
+        renewablePercent: state.inputs ? state.inputs.renewablePercent : -1,
+        recycledPercent: state.inputs ? state.inputs.recycledPercent : -1,
+        currentStreak: state.streak.current,
+        weeklyChallengesCompleted: state.weeklyChallenge.completedWeeks.length,
+        checklistAllCompletedToday: Gamification.allChecklistItemsCompletedToday(state),
+        ecoScore: state.ecoScore
+      };
+    },
+    evaluateComparator: function (metricValue, comparator, threshold) {
+      switch (comparator) {
+        case 'gte': return typeof metricValue === 'number' && metricValue >= threshold;
+        case 'lte': return typeof metricValue === 'number' && metricValue <= threshold;
+        case 'boolean': return metricValue === threshold;
+        case 'isIn': return Array.isArray(threshold) && threshold.indexOf(metricValue) !== -1;
+        default: return false;
+      }
+    },
+    evaluateAchievements: function (state) {
+      var metrics = Gamification.buildMetrics(state);
+      var newlyUnlocked = [];
+      Data.ACHIEVEMENTS.forEach(function (achievement) {
+        if (state.unlockedAchievements.indexOf(achievement.id) !== -1) return;
+        var satisfied = Gamification.evaluateComparator(metrics[achievement.metric], achievement.comparator, achievement.threshold);
+        if (satisfied) {
+          state.unlockedAchievements.push(achievement.id);
+          Gamification.addPoints(state, Data.ACTION_POINTS.achievementUnlock);
+          newlyUnlocked.push(achievement);
+        }
+      });
+      return newlyUnlocked;
+    },
+    ensureChecklistFresh: function (state) {
+      var today = Utils.getTodayKey();
+      if (state.checklist.date !== today) {
+        state.checklist = { date: today, completed: {}, awarded: {} };
+      }
+    },
+    checkStreakBreak: function (state) {
+      var today = Utils.getTodayKey();
+      var yesterday = Utils.getYesterdayKey();
+      if (state.streak.lastActiveDate && state.streak.lastActiveDate !== today && state.streak.lastActiveDate !== yesterday) {
+        state.streak.current = 0;
+      }
+    },
+    updateStreakForToday: function (state) {
+      var today = Utils.getTodayKey();
+      var yesterday = Utils.getYesterdayKey();
+      if (state.streak.lastActiveDate === today) return;
+      if (state.streak.lastActiveDate === yesterday) {
+        state.streak.current += 1;
+      } else {
+        state.streak.current = 1;
+      }
+      state.streak.lastActiveDate = today;
+      state.streak.longest = Math.max(state.streak.longest, state.streak.current);
+    },
+    toggleChecklistItem: function (state, itemId, checked) {
+      var item = Data.CHECKLIST_ITEMS.find(function (i) { return i.id === itemId; });
+      if (!item) return null;
+      Gamification.ensureChecklistFresh(state);
+      state.checklist.completed[itemId] = checked;
+      var pointsEarned = 0;
+      if (checked && !state.checklist.awarded[itemId]) {
+        state.checklist.awarded[itemId] = true;
+        Gamification.addPoints(state, item.points);
+        pointsEarned = item.points;
+        Gamification.updateStreakForToday(state);
+      }
+      return { item: item, pointsEarned: pointsEarned };
+    },
+    completeCurrentChallenge: function (state) {
+      var current = Gamification.getCurrentChallenge();
+      if (state.weeklyChallenge.completedWeeks.indexOf(current.weekKey) !== -1) {
+        return { alreadyDone: true, challenge: current.challenge };
+      }
+      state.weeklyChallenge.completedWeeks.push(current.weekKey);
+      Gamification.addPoints(state, current.challenge.points);
+      return { alreadyDone: false, challenge: current.challenge };
     }
 };

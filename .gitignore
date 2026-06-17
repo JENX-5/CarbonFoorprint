@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Project reference & source folders
+Refer/
+newfiles/
+newfiles.zip
