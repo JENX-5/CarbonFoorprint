@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;" />
+  <title>Contour — Carbon Footprint Awareness Platform</title>
+  <meta name="description" content="Calculate your carbon footprint, get explainable AI-style recommendations, simulate lifestyle changes, and build sustainable habits with Contour." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <div id="toastRegion" class="toast-region" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="#overview" aria-label="Contour, back to top">
+        <svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+          <circle cx="24" cy="24" r="20" class="contour-ring contour-ring--1" />
+          <circle cx="24" cy="24" r="13" class="contour-ring contour-ring--2" />
+          <circle cx="24" cy="24" r="6" class="contour-ring contour-ring--3" />
+        </svg>
+        <span class="brand__text">Contour</span>
+      </a>
+
+      <button
+        type="button"
+        class="nav-toggle"
+        id="navToggle"
+        aria-expanded="false"
+        aria-controls="primaryNav"
+      >
+        <span class="visually-hidden">Toggle navigation menu</span>
+        <span class="nav-toggle__bar" aria-hidden="true"></span>
+        <span class="nav-toggle__bar" aria-hidden="true"></span>
+        <span class="nav-toggle__bar" aria-hidden="true"></span>
+      </button>
+
+      <nav class="primary-nav" id="primaryNav" aria-label="Primary">
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#calculator">Calculator</a></li>
+          <li><a href="#insights">Insights</a></li>
+          <li><a href="#simulator">Simulator</a></li>
+          <li><a href="#dashboard">Dashboard</a></li>
+          <li><a href="#challenges">Challenges</a></li>
+          <li><a href="#learn">Learn</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+
+    <!-- ======================= HERO / OVERVIEW ======================= -->
+    <section id="overview" class="hero" aria-labelledby="hero-heading">
+      <div class="hero__contours" aria-hidden="true">
+        <svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" focusable="false">
+          <path class="contour-line" d="M-20,420 C150,380 250,460 400,400 C550,340 650,420 820,360" />
+          <path class="contour-line" d="M-20,350 C150,310 260,390 410,330 C560,270 660,350 820,290" />
+          <path class="contour-line" d="M-20,470 C150,440 250,500 400,460 C550,420 650,480 820,440" />
+        </svg>
+      </div>
+      <div class="hero__inner">
+        <p class="eyebrow">Carbon Footprint Awareness Platform</p>
+        <h1 id="hero-heading">Map your carbon footprint.<br />Change its shape.</h1>
+        <p class="hero__lede">
+          Contour turns five everyday habits — getting around, powering your home, eating, throwing
+          things away, and using water — into one clear number. Then it acts like a sustainability
+          coach: explaining what is driving your impact, letting you test changes before you make
+          them, and turning steady habits into visible progress.
+        </p>
+        <div class="hero__actions">
+          <a class="button button--primary" href="#calculator">Calculate my footprint</a>
+          <a class="button button--ghost" href="#dashboard">View dashboard</a>
+        </div>
+
+        <div class="hero__stat" aria-live="polite">
+          <p class="hero__stat-label" id="heroStatLabel">Your estimated annual footprint</p>
+          <p class="hero__stat-value">
+            <span id="heroAnnualValue">—</span>
+            <span class="hero__stat-unit">kg CO2e / year</span>
+          </p>
+          <p class="hero__stat-hint" id="heroStatHint">Fill in the calculator below to see your number.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= CALCULATOR ======================= -->
+    <section id="calculator" class="section" aria-labelledby="calculator-heading">
+      <div class="section__inner">
+        <p class="eyebrow">Step one</p>
+        <h2 id="calculator-heading">Carbon calculator</h2>
+        <p class="section__intro">
+          Enter your typical week. Every field has a sensible default range — Contour will flag
+          anything that looks like a typo before it touches your results.
+        </p>
+
+        <form id="calculatorForm" class="calc-form" novalidate>
+
+          <fieldset class="calc-fieldset">
+            <legend><span class="legend-icon" aria-hidden="true">🚗</span> Transportation</legend>
+
+            <div class="form-row">
+              <label for="vehicleType">Main commute vehicle</label>
+              <select id="vehicleType" name="vehicleType">
+                <option value="none">No regular commute by vehicle</option>
+                <option value="petrolCar" selected>Petrol / gasoline car</option>
+                <option value="dieselCar">Diesel car</option>
+                <option value="hybridCar">Hybrid car</option>
+                <option value="electricCar">Electric car</option>
+                <option value="motorbike">Motorbike / scooter</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="commuteKmPerDay">Distance driven per day (km)</label>
+              <input type="number" id="commuteKmPerDay" name="commuteKmPerDay" autocomplete="off" min="0" max="500" step="0.1" value="20" inputmode="decimal" aria-describedby="commuteKmPerDay-error" />
+              <p class="field-error" id="commuteKmPerDay-error" aria-live="polite"></p>
+            </div>
+
+            <div class="form-row">
+              <label for="transitKmPerWeek">Public transit distance per week (km)</label>
+              <input type="number" id="transitKmPerWeek" name="transitKmPerWeek" min="0" max="2000" step="0.1" value="0" inputmode="decimal" aria-describedby="transitKmPerWeek-error" />
+              <p class="field-error" id="transitKmPerWeek-error" aria-live="polite"></p>
+            </div>
+
+            <div class="form-row form-row--split">
+              <div>
+                <label for="flightsShortHaulPerYear">Short-haul flights per year</label>
+                <input type="number" id="flightsShortHaulPerYear" name="flightsShortHaulPerYear" min="0" max="100" step="1" value="0" inputmode="numeric" aria-describedby="flightsShortHaulPerYear-error" />
+                <p class="field-error" id="flightsShortHaulPerYear-error" aria-live="polite"></p>
+              </div>
+              <div>
+                <label for="flightsLongHaulPerYear">Long-haul flights per year</label>
+                <input type="number" id="flightsLongHaulPerYear" name="flightsLongHaulPerYear" min="0" max="100" step="1" value="0" inputmode="numeric" aria-describedby="flightsLongHaulPerYear-error" />
+                <p class="field-error" id="flightsLongHaulPerYear-error" aria-live="polite"></p>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="calc-fieldset">
+            <legend><span class="legend-icon" aria-hidden="true">⚡</span> Electricity</legend>
+
+            <div class="form-row">
+              <label for="electricityKwhPerMonth">Electricity used per month (kWh)</label>
+              <input type="number" id="electricityKwhPerMonth" name="electricityKwhPerMonth" autocomplete="off" min="0" max="5000" step="1" value="250" inputmode="decimal" aria-describedby="electricityKwhPerMonth-error" />
+              <p class="field-error" id="electricityKwhPerMonth-error" aria-live="polite"></p>
+            </div>
+
+            <div class="form-row">
+              <label for="renewablePercent">Share from renewables (%)</label>
+              <input type="number" id="renewablePercent" name="renewablePercent" min="0" max="100" step="1" value="0" inputmode="numeric" aria-describedby="renewablePercent-error" />
+              <p class="field-error" id="renewablePercent-error" aria-live="polite"></p>
+            </div>
+          </fieldset>
+
+          <fieldset class="calc-fieldset">
+            <legend><span class="legend-icon" aria-hidden="true">🍽️</span> Diet</legend>
+
+            <div class="form-row">
+              <label for="dietType">Overall dietary pattern</label>
+              <select id="dietType" name="dietType">
+                <option value="meatHeavy">Meat with most meals</option>
+                <option value="mediumMeat" selected>Meat most days</option>
+                <option value="lowMeat">Meat a few times a week</option>
+                <option value="pescatarian">Pescatarian (fish, no other meat)</option>
+                <option value="vegetarian">Vegetarian</option>
+                <option value="vegan">Vegan</option>
+              </select>
+            </div>
+          </fieldset>
+
+          <fieldset class="calc-fieldset">
+            <legend><span class="legend-icon" aria-hidden="true">🗑️</span> Waste</legend>
+
+            <div class="form-row">
+              <label for="wasteKgPerWeek">Household waste per week (kg)</label>
+              <input type="number" id="wasteKgPerWeek" name="wasteKgPerWeek" min="0" max="200" step="0.1" value="8" inputmode="decimal" aria-describedby="wasteKgPerWeek-error" />
+              <p class="field-error" id="wasteKgPerWeek-error" aria-live="polite"></p>
+            </div>
+
+            <div class="form-row">
+              <label for="recycledPercent">Share recycled or composted (%)</label>
+              <input type="number" id="recycledPercent" name="recycledPercent" min="0" max="100" step="1" value="30" inputmode="numeric" aria-describedby="recycledPercent-error" />
+              <p class="field-error" id="recycledPercent-error" aria-live="polite"></p>
+            </div>
+          </fieldset>
+
+          <fieldset class="calc-fieldset">
+            <legend><span class="legend-icon" aria-hidden="true">💧</span> Water</legend>
+
+            <div class="form-row">
+              <label for="waterLitersPerDay">Water used per day (litres)</label>
+              <input type="number" id="waterLitersPerDay" name="waterLitersPerDay" min="0" max="2000" step="1" value="150" inputmode="decimal" aria-describedby="waterLitersPerDay-error" />
+              <p class="field-error" id="waterLitersPerDay-error" aria-live="polite"></p>
+            </div>
+
+            <div class="form-row form-row--checkbox">
+              <input type="checkbox" id="waterHeatedMostly" name="waterHeatedMostly" />
+              <label for="waterHeatedMostly">Most of this water is heated (showers, laundry, dishes)</label>
+            </div>
+          </fieldset>
+
+          <div class="calc-form__actions">
+            <button type="submit" class="button button--primary" id="calculateBtn">Calculate footprint</button>
+            <button type="button" class="button button--ghost" id="resetCalculatorBtn">Reset form</button>
+          </div>
+
+          <p class="form-status" id="formStatus" role="alert"></p>
+        </form>
+
+        <div class="calc-summary" id="calculatorSummary" aria-live="polite" hidden>
+          <h3>Your footprint, just calculated</h3>
+          <div class="calc-summary__grid">
+            <div>
+              <p class="calc-summary__label">Daily</p>
+              <p class="calc-summary__value"><span id="summaryDaily">0</span> <span>kg CO2e</span></p>
+            </div>
+            <div>
+              <p class="calc-summary__label">Monthly</p>
+              <p class="calc-summary__value"><span id="summaryMonthly">0</span> <span>kg CO2e</span></p>
+            </div>
+            <div>
+              <p class="calc-summary__label">Annual</p>
+              <p class="calc-summary__value"><span id="summaryAnnual">0</span> <span>kg CO2e</span></p>
+            </div>
+          </div>
+          <p class="calc-summary__cta">See your <a href="#insights">AI insights</a>, full <a href="#dashboard">dashboard</a>, and the <a href="#simulator">scenario simulator</a> below.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= INSIGHTS ======================= -->
+    <section id="insights" class="section section--alt" aria-labelledby="insights-heading">
+      <div class="section__inner">
+        <p class="eyebrow">Step two</p>
+        <h2 id="insights-heading">AI insights engine</h2>
+        <p class="section__intro">
+          Every insight below is generated by transparent, rule-based logic running on your own
+          numbers — never a black box. Each recommendation states exactly which habit it targets
+          and how the estimated saving was derived.
+        </p>
+
+        <div id="insightsEmptyState" class="empty-state">
+          <p>Run the calculator to generate your personalized insights.</p>
+        </div>
+
+        <div id="insightsContent" class="insights" aria-live="polite" hidden>
+          <div class="insight-card insight-card--primary">
+            <h3>Highest emission source</h3>
+            <p class="insight-card__headline"><span id="insightTopCategory">—</span></p>
+            <p id="insightTopCategoryDetail">—</p>
+          </div>
+
+          <div class="insight-card">
+            <h3>Recommendations</h3>
+            <ol class="recommendation-list" id="recommendationList"></ol>
+          </div>
+
+          <div class="insight-card insight-card--accent">
+            <h3>If you acted on all of the above</h3>
+            <p class="insight-card__headline"><span id="insightTotalSavings">0</span> kg CO2e saved / year</p>
+            <p id="insightTotalSavingsDetail">—</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= SIMULATOR ======================= -->
+    <section id="simulator" class="section" aria-labelledby="simulator-heading">
+      <div class="section__inner">
+        <p class="eyebrow">Step three</p>
+        <h2 id="simulator-heading">Scenario simulator</h2>
+        <p class="section__intro">
+          Drag the sliders to test "what if" changes against your calculated baseline. Nothing
+          here is saved automatically — it is a safe space to explore before you commit.
+        </p>
+
+        <div id="simulatorLocked" class="empty-state">
+          <p>Calculate your footprint first — the simulator needs a baseline to compare against.</p>
+        </div>
+
+        <div id="simulatorContent" hidden>
+          <div class="simulator">
+            <div class="simulator__controls">
+
+              <div class="slider-row">
+                <div class="slider-row__label">
+                  <label for="simDriveLess">Drive less</label>
+                  <output for="simDriveLess" id="simDriveLessOutput">0%</output>
+                </div>
+                <input type="range" id="simDriveLess" min="0" max="100" step="5" value="0" />
+              </div>
+
+              <div class="slider-row">
+                <div class="slider-row__label">
+                  <label for="simRenewableTarget">Use renewable electricity</label>
+                  <output for="simRenewableTarget" id="simRenewableTargetOutput">0%</output>
+                </div>
+                <input type="range" id="simRenewableTarget" min="0" max="100" step="5" value="0" />
+              </div>
+
+              <div class="slider-row">
+                <div class="slider-row__label">
+                  <label for="simDietTarget">Eat less meat — switch diet to</label>
+                </div>
+                <select id="simDietTarget">
+                  <option value="meatHeavy">Meat with most meals</option>
+                  <option value="mediumMeat">Meat most days</option>
+                  <option value="lowMeat" selected>Meat a few times a week</option>
+                  <option value="pescatarian">Pescatarian</option>
+                  <option value="vegetarian">Vegetarian</option>
+                  <option value="vegan">Vegan</option>
+                </select>
+              </div>
+
+              <div class="slider-row">
+                <div class="slider-row__label">
+                  <label for="simWasteReduce">Reduce waste</label>
+                  <output for="simWasteReduce" id="simWasteReduceOutput">0%</output>
+                </div>
+                <input type="range" id="simWasteReduce" min="0" max="100" step="5" value="0" />
+              </div>
+
+              <button type="button" class="button button--ghost" id="resetSimulatorBtn">Reset simulator</button>
+            </div>
+
+            <div class="simulator__results" aria-live="polite">
+              <h3>Projected annual footprint</h3>
+              <p class="simulator__big-number"><span id="simNewAnnual">0</span> <span>kg CO2e</span></p>
+              <p id="simDeltaText">No changes yet — move a slider to see the effect.</p>
+
+              <dl class="simulator__breakdown">
+                <div>
+                  <dt>Saved per year</dt>
+                  <dd><span id="simSavedKg">0</span> kg CO2e</dd>
+                </div>
+                <div>
+                  <dt>Equivalent to</dt>
+                  <dd><span id="simEquivalentTrees">0</span> trees absorbing CO2 for a year</dd>
+                </div>
+                <div>
+                  <dt>Or roughly</dt>
+                  <dd><span id="simEquivalentKm">0</span> fewer km driven</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= DASHBOARD ======================= -->
+    <section id="dashboard" class="section section--alt" aria-labelledby="dashboard-heading">
+      <div class="section__inner">
+        <p class="eyebrow">Your numbers</p>
+        <h2 id="dashboard-heading">Sustainability dashboard</h2>
+
+        <div id="dashboardEmptyState" class="empty-state">
+          <p>Your dashboard will populate as soon as you calculate your footprint.</p>
+        </div>
+
+        <div id="dashboardContent" hidden>
+          <div class="kpi-grid">
+            <article class="kpi-card">
+              <h3>Daily footprint</h3>
+              <p class="kpi-card__value"><span id="dailyTotal">0</span></p>
+              <p class="kpi-card__unit">kg CO2e</p>
+            </article>
+            <article class="kpi-card">
+              <h3>Monthly footprint</h3>
+              <p class="kpi-card__value"><span id="monthlyTotal">0</span></p>
+              <p class="kpi-card__unit">kg CO2e</p>
+            </article>
+            <article class="kpi-card">
+              <h3>Annual footprint</h3>
+              <p class="kpi-card__value"><span id="annualTotal">0</span></p>
+              <p class="kpi-card__unit">kg CO2e</p>
+            </article>
+            <article class="kpi-card">
+              <h3>Vs. global average</h3>
+              <p class="kpi-card__value kpi-card__value--small" id="vsAverage">—</p>
+              <p class="kpi-card__unit">(~4,700 kg CO2e/year)</p>
+            </article>
+          </div>
+
+          
+          <div class="chart-panel">
+            <h3>Emissions Breakdown</h3>
+            <div class="breakdown-chart" id="breakdownChart" aria-hidden="true">
+              <div class="chart-bar" id="chartTransport" style="--share: 0%;" title="Transportation"></div>
+              <div class="chart-bar" id="chartElectricity" style="--share: 0%;" title="Electricity"></div>
+              <div class="chart-bar" id="chartDiet" style="--share: 0%;" title="Diet"></div>
+              <div class="chart-bar" id="chartWaste" style="--share: 0%;" title="Waste"></div>
+              <div class="chart-bar" id="chartWater" style="--share: 0%;" title="Water"></div>
+            </div>
+            <div class="chart-legend" id="chartLegend" aria-live="polite"></div>
+          </div>
+
+          <div class="dashboard-detail">
+            <div class="score-panel">
+              <div class="score-ring-wrap" role="img" id="scoreRingLabel" aria-label="Carbon score not yet calculated">
+                <svg viewBox="0 0 180 180" class="score-ring" aria-hidden="true" focusable="false">
+                  <circle class="score-ring__decor" cx="90" cy="90" r="84" />
+                  <circle class="score-ring__decor" cx="90" cy="90" r="70" />
+                  <circle class="score-ring__track" cx="90" cy="90" r="78" />
+                  <circle class="score-ring__progress" id="scoreRingProgress" cx="90" cy="90" r="78" />
+                </svg>
+                <div class="score-ring__text">
+                  <span class="score-ring__value" id="carbonScoreValue">—</span>
+                  <span class="score-ring__max">/ 100</span>
+                </div>
+              </div>
+              <p class="score-panel__rating" id="sustainabilityRating">Calculate to see your rating</p>
+            </div>
+
+            <div class="goal-panel">
+              <h3>Progress toward your reduction goal</h3>
+              <p id="goalDescription">Calculate your footprint to set a 10% reduction goal automatically.</p>
+              <progress id="goalProgressBar" max="100" value="0" aria-label="Progress toward reduction goal"></progress>
+              <p class="goal-panel__caption" id="goalProgressCaption">0% of the way there</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= GAMIFICATION / CHALLENGES ======================= -->
+    <section id="challenges" class="section" aria-labelledby="challenges-heading">
+      <div class="section__inner">
+        <p class="eyebrow">Build the habit</p>
+        <h2 id="challenges-heading">Eco score &amp; challenges</h2>
+
+        <div class="eco-status">
+          <div class="eco-status__score">
+            <p class="eco-status__label">Eco score</p>
+            <p class="eco-status__value"><span id="ecoScoreValue">0</span></p>
+            <p class="eco-status__level" id="ecoLevelLabel">Sprout</p>
+          </div>
+          <div class="eco-status__streak">
+            <p class="eco-status__label">Current streak</p>
+            <p class="eco-status__value"><span id="streakValue">0</span> <span class="eco-status__unit">days</span></p>
+            <p class="eco-status__level">Longest: <span id="longestStreakValue">0</span> days</p>
+          </div>
+        </div>
+
+        <div class="challenges-grid">
+          <div class="panel">
+            <h3 id="checklist-heading">Today's checklist</h3>
+            <p class="panel__intro">Check off real actions today. Each one earns points and keeps your streak alive.</p>
+            <ul class="checklist" id="dailyChecklist" aria-labelledby="checklist-heading"></ul>
+          </div>
+
+          <div class="panel" id="weeklyChallengeCard">
+            <h3>This week's challenge</h3>
+            <p class="challenge-title" id="challengeTitle">—</p>
+            <p id="challengeDescription">—</p>
+            <p class="challenge-points">Worth <span id="challengePoints">0</span> points</p>
+            <button type="button" class="button button--primary" id="completeChallengeBtn">Mark week complete</button>
+            <p class="challenge-status" id="challengeStatus" role="status"></p>
+          </div>
+        </div>
+
+        <h3 class="badges-heading">Achievements</h3>
+        <ul class="badges-grid" id="badgesGrid" aria-label="Achievements"></ul>
+      </div>
+    </section>
+
+    <!-- ======================= EDUCATION HUB ======================= -->
+    <section id="learn" class="section section--alt" aria-labelledby="learn-heading">
+      <div class="section__inner">
+        <p class="eyebrow">Keep learning</p>
+        <h2 id="learn-heading">Education hub</h2>
+        <p class="section__intro" id="learnIntro">
+          Tips are sorted to your biggest emission source once you calculate your footprint.
+          Browse any category below in the meantime.
+        </p>
+
+        <div class="tabs">
+          <div class="tabs__list" role="tablist" aria-label="Tip categories" id="tipsTablist"></div>
+          <div class="tabs__panel" id="tipsPanel" role="tabpanel" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>
+        Contour estimates are illustrative averages meant to build awareness, not a certified
+        carbon accounting tool. See the README for the full methodology and assumptions.
+      </p>
+      <div class="site-footer__actions">
+        <a href="#overview">Back to top</a>
+        <button type="button" class="button button--ghost button--small" id="resetAllDataBtn">Reset all my data</button>
+      </div>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
