@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { Storage, defaultState, loadState } from "../src/lib/storage.js";
+import { Storage, defaultState, loadState } from "@/lib/storage.js";
 
 describe("Storage Module", () => {
   beforeEach(() => {

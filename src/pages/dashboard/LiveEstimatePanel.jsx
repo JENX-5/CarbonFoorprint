@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { computeFootprint } from "../../lib/calculations.js";
-import { CarbonData as Data } from "../../lib/data.js";
-import { CATEGORY_ICONS } from "../../components/icons/index.jsx";
-import { formatNumber } from "../../lib/format.js";
+import { computeFootprint } from "@/lib/calculations.js";
+import { CarbonData as Data } from "@/lib/data.js";
+import { CATEGORY_ICONS } from "@/components/icons/index.jsx";
+import { formatNumber } from "@/lib/format.js";
 
 export function LiveEstimatePanel({ form }) {
   const results = useMemo(() => computeFootprint(form), [form]);

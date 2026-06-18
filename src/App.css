@@ -182,3 +182,290 @@
     border-right-color: var(--border);
   }
 }
+
+/* Consolidated Calculator Wizard Review Table & Step Styles */
+.calculator-wizard {
+  width: 100%;
+}
+.calculator-wizard__step-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.calculator-wizard__step-icon {
+  color: var(--color-canopy);
+}
+.calculator-wizard__step-title {
+  margin: 0;
+}
+.calculator-wizard__step-intro {
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+.review-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+}
+.review-table th,
+.review-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-line);
+}
+.review-table th {
+  background: var(--color-mist);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+.review-category {
+  font-weight: 700;
+  color: var(--color-canopy);
+}
+
+/* Consolidated Simulator Page Styles */
+.simulator-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  margin-top: 2rem;
+}
+@media (min-width: 1024px) {
+  .simulator-layout {
+    grid-template-columns: 1.2fr 1fr;
+  }
+}
+.slider-card {
+  background: var(--color-paper);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-card);
+}
+.slider-group {
+  margin-bottom: 2rem;
+}
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.slider-header label {
+  font-weight: 700;
+  color: var(--color-canopy-dark);
+}
+.slider-value {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--color-clay);
+}
+.range-input {
+  width: 100%;
+  height: 6px;
+  border-radius: 9999px;
+  accent-color: var(--color-canopy);
+  background: var(--color-mist);
+  outline: none;
+}
+.select-input {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1.5px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  background: var(--color-mist);
+  font-family: var(--font-body);
+}
+.results-card {
+  background: var(--color-canopy);
+  color: #ffffff;
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-card);
+  align-self: start;
+}
+.projection-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+.big-projection {
+  font-family: var(--font-mono);
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0.5rem 0;
+  color: var(--color-sun);
+}
+.baseline-comparison {
+  font-size: 0.9rem;
+  opacity: 0.85;
+  margin: 0;
+}
+.equivalent-stat {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+}
+.equivalent-icon {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 8px;
+  border-radius: 50%;
+  color: var(--color-sun);
+}
+.equivalent-text {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* CalculatorWizard custom button placement */
+.calculator-wizard__btn-right {
+  margin-left: auto;
+}
+
+/* Simulator Sliders adjustments */
+.slider-card__title {
+  margin-bottom: 2rem;
+  font-size: 1.2rem;
+}
+.slider-card__desc {
+  margin: 0.25rem 0 0;
+  font-size: 0.82rem;
+  color: var(--color-charcoal-soft);
+}
+.slider-group--last {
+  margin-bottom: 0;
+}
+
+/* Simulator Results card classes */
+.results-card__title {
+  color: #ffffff;
+  margin: 0;
+  fontsize: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.results-card__sub-title {
+  color: #ffffff;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+.results-card__apply-btn {
+  width: 100%;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--color-sun) !important;
+  color: var(--color-canopy-dark) !important;
+  border: none;
+  font-weight: 700;
+}
+
+/* Insights Page structural and typography classes */
+.insights--margin-top {
+  margin-top: 2rem;
+}
+.insight-card__title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-charcoal-soft);
+  margin: 0 0 0.5rem 0;
+}
+.insight-card__title--recommendations {
+  margin: 0 0 1rem 0;
+}
+.insight-card__title--accent {
+  color: var(--color-canopy-dark);
+}
+.insight-card__category-icon {
+  display: inline;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.insight-card__sub-text {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--color-charcoal-soft);
+}
+.insight-card__sub-text--accent {
+  color: var(--color-canopy-dark);
+  opacity: 0.85;
+  font-size: 0.92rem;
+}
+.insight-card__headline--accent {
+  color: var(--color-canopy-dark);
+}
+.insight-card--accent {
+  background: var(--color-good-bg);
+}
+.recommendation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0;
+  list-style: none;
+}
+.recommendation-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--color-mist);
+  border-radius: 8px;
+  border: 1px solid var(--color-line);
+}
+.recommendation-item__icon-wrap {
+  background: var(--color-paper);
+  padding: 8px;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  color: var(--color-canopy);
+}
+.recommendation-item__category {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-moss);
+  letter-spacing: 0.05em;
+}
+.recommendation-item__text {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-charcoal);
+}
+.recommendation-item__savings {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-moss);
+  font-weight: 500;
+}
+.recommendation-item__savings-value {
+  color: var(--color-clay);
+}
+.trend-chart-empty {
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  gap: 0.5rem;
+}
+
+.trend-chart-container {
+  position: relative;
+  width: 100%;
+  height: 250px;
+}

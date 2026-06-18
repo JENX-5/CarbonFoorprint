@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import { useCalculatorForm } from "../../src/hooks/useCalculatorForm.js";
-import { DEFAULT_INPUTS } from "../../src/lib/constants.js";
+import { useCalculatorForm } from "@/hooks/useCalculatorForm.js";
+import { DEFAULT_INPUTS } from "@/lib/constants.js";
 
 describe("useCalculatorForm hook", () => {
   it("should initialize with correct default values", () => {

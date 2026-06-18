@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { generateInsights } from "../src/lib/insightsEngine.js";
+import { generateInsights } from "@/lib/insightsEngine.js";
 
 describe("Insights Engine", () => {
   it("should generate relevant recommendations and top drivers", () => {

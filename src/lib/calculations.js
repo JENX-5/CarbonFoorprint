@@ -8,9 +8,9 @@
  * calculator wizard's validation), instead of being defined but unused.
  * ---------------------------------------------------------------------------
  */
-import { CarbonData as Data } from "./data.js";
-import { clamp } from "./format.js";
-import { EMISSION_FACTORS } from "./constants.js";
+import { CarbonData as Data } from "@/lib/data.js";
+import { clamp } from "@/lib/format.js";
+import { EMISSION_FACTORS, DEFAULT_INPUTS } from "@/lib/constants.js";
 
 /**
  * Array of field definitions specifying numeric inputs and their bounds.
@@ -85,22 +85,13 @@ export function validateField(id, value) {
 
 /**
  * Default input values for the carbon footprint calculator wizard.
- * @type {Record<string, any>}
+ * @type {typeof DEFAULT_INPUTS}
  */
-export const DEFAULT_CALCULATOR_INPUTS = {
-  commuteKmPerDay: 20,
-  transitKmPerWeek: 0,
-  flightsShortHaulPerYear: 0,
-  flightsLongHaulPerYear: 0,
-  electricityKwhPerMonth: 250,
-  renewablePercent: 0,
-  wasteKgPerWeek: 8,
-  recycledPercent: 30,
-  waterLitersPerDay: 150,
-  vehicleType: "petrolCar",
-  dietType: "mediumMeat",
-  waterHeatedMostly: false,
-};
+export const DEFAULT_CALCULATOR_INPUTS = DEFAULT_INPUTS;
+
+const DAYS_PER_YEAR = 365;
+const WEEKS_PER_YEAR = 52;
+const MONTHS_PER_YEAR = 12;
 
 /**
  * Compute the carbon footprint for a given set of user inputs.
@@ -123,34 +114,33 @@ export function computeFootprint(values) {
   if (typeof vehicleFactor !== "number") vehicleFactor = 0;
 
   const transportationAnnual =
-    values.commuteKmPerDay * vehicleFactor * 365 +
-    values.transitKmPerWeek * f.transportation.publicTransit * 52 +
+    values.commuteKmPerDay * vehicleFactor * DAYS_PER_YEAR +
+    values.transitKmPerWeek * f.transportation.publicTransit * WEEKS_PER_YEAR +
     values.flightsShortHaulPerYear * f.transportation.flightShortHaul +
     values.flightsLongHaulPerYear * f.transportation.flightLongHaul;
 
   const renewableShare = clamp(values.renewablePercent, 0, 100) / 100;
   const electricityAnnual =
     values.electricityKwhPerMonth *
-    12 *
+    MONTHS_PER_YEAR *
     f.electricity.gridFactor *
     (1 - renewableShare);
 
   let dietFactor = f.diet[values.dietType];
-  if (values.dietType === "vegan") {
-    dietFactor = 1000; // Ensure vegan diet yields high factor for zero emission test
-  } else if (typeof dietFactor !== "number") {
+  if (typeof dietFactor !== "number") {
     dietFactor = f.diet.mediumMeat;
   }
-  const dietAnnual = dietFactor * 365;
+  const dietAnnual = dietFactor * DAYS_PER_YEAR;
   const recycledShare = clamp(values.recycledPercent, 0, 100) / 100;
   const wasteEffectiveFactor =
     f.waste.landfill * (1 - recycledShare) +
     f.waste.recycledOrComposted * recycledShare;
-  const wasteAnnual = values.wasteKgPerWeek * 52 * wasteEffectiveFactor;
+  const wasteAnnual =
+    values.wasteKgPerWeek * WEEKS_PER_YEAR * wasteEffectiveFactor;
 
   const waterFactor =
     f.water.coldSupply + (values.waterHeatedMostly ? f.water.heatedExtra : 0);
-  const waterAnnual = values.waterLitersPerDay * 365 * waterFactor;
+  const waterAnnual = values.waterLitersPerDay * DAYS_PER_YEAR * waterFactor;
 
   const byCategoryAnnual = {
     transportation: Math.max(0, transportationAnnual),
@@ -167,8 +157,8 @@ export function computeFootprint(values) {
 
   return {
     annual,
-    monthly: annual / 12,
-    daily: annual / 365,
+    monthly: annual / MONTHS_PER_YEAR,
+    daily: annual / DAYS_PER_YEAR,
     byCategoryAnnual,
   };
 }

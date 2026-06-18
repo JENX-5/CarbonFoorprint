@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { runSimulation } from "../src/lib/simulatorEngine.js";
+import { runSimulation } from "@/lib/simulatorEngine.js";
 
 describe("Simulator Engine", () => {
   it("should project footprint after adjusting sliders", () => {

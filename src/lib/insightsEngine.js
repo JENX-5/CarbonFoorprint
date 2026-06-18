@@ -5,8 +5,8 @@
  * also carries a `simulatorPreset` so the Insights page can hand a
  * recommendation straight to the Simulator ("Try this scenario").
  */
-import { EMISSION_FACTORS } from "./constants.js";
-import { CarbonData as Data } from "./data.js";
+import { EMISSION_FACTORS } from "@/lib/constants.js";
+import { CarbonData as Data } from "@/lib/data.js";
 
 /**
  * Generates custom sustainability insights and recommendations.
@@ -46,8 +46,7 @@ export function generateInsights(values, byCategoryAnnual) {
     simulatorPreset: { driveLessPercent: 20 },
   });
 
-  const electricityAt100 =
-    values.electricityKwhPerMonth * 12 * f.electricity.gridFactor * 0;
+  const electricityAt100 = 0; // 100% renewable electricity results in 0 emissions
   const electricitySavings = byCategoryAnnual.electricity - electricityAt100;
   candidates.push({
     category: "electricity",

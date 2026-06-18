@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
-    "types": ["jest", "vitest/globals"],
-    "types": ["jest"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "types": ["vitest/globals"],
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "node",

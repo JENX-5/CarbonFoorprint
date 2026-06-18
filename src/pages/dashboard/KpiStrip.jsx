@@ -1,6 +1,6 @@
-import { formatNumber } from "../../lib/format.js";
-import { useCountUp } from "../../hooks/useCountUp.js";
-import { TrendingDown, TrendingUp } from "../../components/icons/index.jsx";
+import { formatNumber } from "@/lib/format.js";
+import { useCountUp } from "@/hooks/useCountUp.js";
+import { TrendingDown, TrendingUp } from "@/components/icons/index.jsx";
 
 function KpiCard({ label, value, decimals = 0, unit, hint }) {
   const animated = useCountUp(value);

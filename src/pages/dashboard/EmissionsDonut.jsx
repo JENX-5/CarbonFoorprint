@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip } from "chart.js";
-import { CarbonData as Data } from "../../lib/data.js";
-import { CATEGORY_ICONS } from "../../components/icons/index.jsx";
-import { formatNumber } from "../../lib/format.js";
+import { CarbonData as Data } from "@/lib/data.js";
+import { CATEGORY_ICONS } from "@/components/icons/index.jsx";
+import { formatNumber } from "@/lib/format.js";
 
 ChartJS.register(ArcElement, Tooltip);
 

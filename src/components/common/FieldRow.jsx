@@ -1,5 +1,6 @@
-import { CarbonData as Data } from "../../lib/data.js";
-import { AlertTriangle } from "../../components/icons/index.jsx";
+import PropTypes from "prop-types";
+import { CarbonData as Data } from "@/lib/data.js";
+import { AlertTriangle } from "@/components/icons/index.jsx";
 
 export function FieldRow({ field, value, error, onChange }) {
   const inputId = `field-${field.name}`;
@@ -69,3 +70,18 @@ export function FieldRow({ field, value, error, onChange }) {
     </div>
   );
 }
+
+FieldRow.propTypes = {
+  field: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    optionsKey: PropTypes.string,
+    unit: PropTypes.string,
+    min: PropTypes.number,
+    max: PropTypes.number,
+  }).isRequired,
+  value: PropTypes.any,
+  error: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+};

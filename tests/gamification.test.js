@@ -10,9 +10,9 @@ import {
   completeWeeklyChallenge,
   meetsCondition,
   buildMetricsSnapshot,
-} from "../src/lib/gamification.js";
-import { defaultState } from "../src/lib/storage.js";
-import { getYesterdayKey } from "../src/lib/format.js";
+} from "@/lib/gamification.js";
+import { defaultState } from "@/lib/storage.js";
+import { getYesterdayKey } from "@/lib/format.js";
 
 describe("Gamification Engine", () => {
   describe("getLevel and progress math", () => {

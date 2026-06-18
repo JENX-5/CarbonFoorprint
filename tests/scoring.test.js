@@ -3,7 +3,7 @@ import {
   computeScore,
   getRating,
   compareToGlobalAverage,
-} from "../src/lib/scoring.js";
+} from "@/lib/scoring.js";
 
 describe("Scoring Engine", () => {
   describe("computeScore", () => {

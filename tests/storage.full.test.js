@@ -4,7 +4,7 @@ import {
   loadState,
   pushHistoryEntry,
   MAX_HISTORY_ENTRIES,
-} from "../src/lib/storage.js";
+} from "@/lib/storage.js";
 import { describe, beforeEach, it, expect, vi } from "vitest";
 
 describe("Storage module full coverage", () => {

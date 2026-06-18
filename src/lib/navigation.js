@@ -1,4 +1,4 @@
-import { NAV_ICONS } from "../components/icons/index.jsx";
+import { NAV_ICONS } from "@/components/icons/index.jsx";
 
 /**
  * Navigation items configuration including path, label, icon and description.

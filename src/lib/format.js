@@ -101,6 +101,9 @@ export function getYesterdayKey() {
   return getDateKey(d);
 }
 
+const MS_PER_DAY = 86400000;
+const DAYS_PER_WEEK = 7;
+
 /**
  * Returns ISO week info (year and week number) for a given date.
  *
@@ -111,10 +114,10 @@ export function getISOWeekInfo(date) {
   const d = new Date(
     Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()),
   );
-  const dayNum = d.getUTCDay() || 7;
+  const dayNum = d.getUTCDay() || DAYS_PER_WEEK;
   d.setUTCDate(d.getUTCDate() + 4 - dayNum);
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  const week = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+  const week = Math.ceil(((d - yearStart) / MS_PER_DAY + 1) / DAYS_PER_WEEK);
   return { isoYear: d.getUTCFullYear(), week };
 }
 

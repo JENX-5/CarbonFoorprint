@@ -9,7 +9,7 @@ import {
   getISOWeekInfo,
   getCurrentWeekKey,
   formatHistoryDate,
-} from "../src/lib/format.js";
+} from "@/lib/format.js";
 
 describe("format utilities", () => {
   it("clamp works within bounds", () => {

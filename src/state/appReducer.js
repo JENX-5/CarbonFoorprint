@@ -13,13 +13,13 @@ import {
   defaultState,
   pushHistoryEntry,
   sanitizeState,
-} from "../lib/storage.js";
+} from "@/lib/storage.js";
 import {
   applyAchievements,
   toggleChecklistItem,
   completeWeeklyChallenge,
-} from "../lib/gamification.js";
-import { CarbonData as Data } from "../lib/data.js";
+} from "@/lib/gamification.js";
+import { CarbonData as Data } from "@/lib/data.js";
 
 /**
  * Wraps state update and applies any achievements that are newly earned.

@@ -1,3 +1,19 @@
+import PropTypes from "prop-types";
+
+/**
+ * @typedef {Object} PageHeaderProps
+ * @property {React.ComponentType<{ size: number }>} [icon] - Header icon component.
+ * @property {string} [eyebrow] - Small text shown above the main title.
+ * @property {string} title - Main header title.
+ * @property {string} [description] - Subtext or overview paragraph description.
+ * @property {React.ReactNode} [actions] - Action buttons or elements displayed on the right.
+ */
+
+/**
+ * PageHeader component. Renders standard page title sections with icons and layout action sections.
+ *
+ * @param {PageHeaderProps} props
+ */
 export function PageHeader({
   icon: Icon,
   eyebrow,
@@ -25,3 +41,11 @@ export function PageHeader({
     </div>
   );
 }
+
+PageHeader.propTypes = {
+  icon: PropTypes.elementType,
+  eyebrow: PropTypes.string,
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string,
+  actions: PropTypes.node,
+};

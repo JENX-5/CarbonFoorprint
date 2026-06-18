@@ -13,11 +13,9 @@
  *   - gamification levels and point values
  *   - scoring / benchmark configuration
  *
- * No application logic lives here. script.js reads from this file but never
- * mutates it. Everything is attached to a single global namespace
- * (window.CarbonData) so the two files can be loaded as plain, dependency
- * free <script> tags — which keeps the project workable even when opened
- * directly from disk (file://) with no build step or local server.
+ * No application logic lives here. This module exports the static configurations
+ * and constants used throughout the React application.
+ * All factors and benchmarks are exposed cleanly as structured data objects.
  *
  * IMPORTANT — about the numbers below:
  * Emission factors for everyday activities vary a great deal by country,
@@ -28,7 +26,7 @@
  * ---------------------------------------------------------------------------
  */
 /** Emission factors. Units are noted on every entry. */
-var EMISSION_FACTORS = {
+const EMISSION_FACTORS = {
   transportation: {
     // kg CO2e per km, by vehicle/mode used for the daily commute
     vehicles: {
@@ -72,7 +70,7 @@ var EMISSION_FACTORS = {
 };
 
 /** Order in which categories should generally be displayed. */
-var CATEGORY_ORDER = [
+const CATEGORY_ORDER = [
   "transportation",
   "electricity",
   "diet",
@@ -80,7 +78,7 @@ var CATEGORY_ORDER = [
   "water",
 ];
 
-var CATEGORY_LABELS = {
+const CATEGORY_LABELS = {
   transportation: "Transportation",
   electricity: "Electricity",
   diet: "Diet",
@@ -89,7 +87,7 @@ var CATEGORY_LABELS = {
 };
 
 /** Single decorative glyph per category — always paired with text, never used alone. */
-var CATEGORY_ICONS = {
+const CATEGORY_ICONS = {
   transportation: "\uD83D\uDE97",
   electricity: "\u26A1",
   diet: "\uD83C\uDF7D\uFE0F",
@@ -97,7 +95,7 @@ var CATEGORY_ICONS = {
   water: "\uD83D\uDCA7",
 };
 
-var VEHICLE_LABELS = {
+const VEHICLE_LABELS = {
   none: "No regular commute by vehicle",
   petrolCar: "Petrol / gasoline car",
   dieselCar: "Diesel car",
@@ -106,7 +104,7 @@ var VEHICLE_LABELS = {
   motorbike: "Motorbike / scooter",
 };
 
-var DIET_LABELS = {
+const DIET_LABELS = {
   meatHeavy: "Meat with most meals",
   mediumMeat: "Meat most days",
   lowMeat: "Meat a few times a week",
@@ -120,11 +118,11 @@ var DIET_LABELS = {
  * a rating label, and a comparison against a typical global footprint.
  * These are illustrative benchmarks, not authoritative statistics.
  */
-var BENCHMARKS = {
+const BENCHMARKS = {
   globalAverageAnnualKg: 4700,
 };
 
-var SCORE_BOUNDS = {
+const SCORE_BOUNDS = {
   // Annual kg CO2e mapped to a score of 100 (best) ...
   best: 1500,
   // ... down to a score of 0 (worst)
@@ -132,7 +130,7 @@ var SCORE_BOUNDS = {
 };
 
 /** Highest "min" whose threshold the score clears wins. Keep sorted descending. */
-var RATING_THRESHOLDS = [
+const RATING_THRESHOLDS = [
   { min: 80, label: "Excellent", className: "rating-excellent" },
   { min: 60, label: "Good", className: "rating-good" },
   { min: 40, label: "Fair", className: "rating-fair" },
@@ -141,13 +139,13 @@ var RATING_THRESHOLDS = [
 ];
 
 /** Rough, relatable conversions used only to make savings tangible. */
-var CONVERSIONS = {
+const CONVERSIONS = {
   kgAbsorbedPerTreePerYear: 21,
   kgPerKmDrivenAveragePetrolCar: 0.192,
 };
 
 /** Gamification levels. Highest "min" the score clears wins. Keep sorted ascending. */
-var LEVELS = [
+const LEVELS = [
   { name: "Eco Novice", min: 0 },
   { name: "Eco Explorer", min: 100 },
   { name: "Eco Adventurer", min: 300 },
@@ -155,7 +153,7 @@ var LEVELS = [
   { name: "Eco Legend", min: 1500 },
 ];
 
-var ACTION_POINTS = {
+const ACTION_POINTS = {
   calculatorCompleted: 50,
   simulatorRun: 20,
   weeklyChallenge: 100,
@@ -163,7 +161,7 @@ var ACTION_POINTS = {
 };
 
 /** Daily checklist items. "points" are awarded once per item per calendar day. */
-var CHECKLIST_ITEMS = [
+const CHECKLIST_ITEMS = [
   {
     id: "reusableBottle",
     label: "Used a reusable bottle or cup instead of disposable",
@@ -193,7 +191,7 @@ var CHECKLIST_ITEMS = [
 ];
 
 /** Weekly challenges. The active one rotates automatically by ISO week number. */
-var CHALLENGES = [
+const CHALLENGES = [
   {
     id: "meatlessWeek",
     title: "Meatless Week",
@@ -269,7 +267,7 @@ var CHALLENGES = [
  * badge) keeps the achievement system open to extension without touching
  * the evaluation logic.
  */
-var ACHIEVEMENTS = [
+const ACHIEVEMENTS = [
   {
     id: "firstCalculation",
     title: "First Reading",
@@ -363,7 +361,7 @@ var ACHIEVEMENTS = [
 ];
 
 /** Sustainability tips shown in the Education Hub, grouped by category. */
-var SUSTAINABILITY_TIPS = {
+const SUSTAINABILITY_TIPS = {
   transportation: [
     {
       title: "Combine errands into one trip",

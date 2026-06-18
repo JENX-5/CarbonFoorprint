@@ -11,6 +11,8 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 
+import { useAppState } from "@/state/AppStateContext.jsx";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -23,9 +25,12 @@ ChartJS.register(
 );
 
 export function TrendChart({ history = [] }) {
+  const { state } = useAppState();
+  const theme = state?.theme || "system";
+
   const isDark =
-    document.documentElement.getAttribute("data-theme") === "dark" ||
-    (!document.documentElement.getAttribute("data-theme") &&
+    theme === "dark" ||
+    (theme === "system" &&
       window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches);
 
@@ -131,15 +136,7 @@ export function TrendChart({ history = [] }) {
     return (
       <div
         className="empty-state"
-        style={{
-          height: "250px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "1.5rem",
-          gap: "0.5rem",
-        }}
+        className="trend-chart-empty"
       >
         <p
           style={{ margin: 0, fontWeight: 600, color: "var(--color-charcoal)" }}
@@ -162,7 +159,7 @@ export function TrendChart({ history = [] }) {
   }
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "250px" }}>
+    <div className="trend-chart-container">
       <Line data={chartData} options={options} />
     </div>
   );

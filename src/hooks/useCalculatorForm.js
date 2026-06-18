@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CALCULATOR_STEPS } from "../pages/calculator/calculatorSteps.js";
+import { CALCULATOR_STEPS } from "@/pages/calculator/calculatorSteps.js";
 
 /**
  * Custom hook to manage the state and logic of the carbon calculator wizard.
@@ -67,24 +67,20 @@ export function useCalculatorForm(initialForm) {
    */
   const isStepValid = (index) => {
     const step = steps[index];
-    if (!step || !step.fields) return true; // Steps without fields (e.g. review step) are valid.
+    if (!step?.fields) return true; // Steps without fields (e.g. review step) are valid.
 
-    for (const field of step.fields) {
-      if (field.type === "number") {
-        const val = form[field.name];
-        if (
-          val === "" ||
-          val === undefined ||
-          val === null ||
-          isNaN(val) ||
-          val < field.min ||
-          val > field.max
-        ) {
-          return false;
-        }
-      }
-    }
-    return true;
+    return step.fields.every((field) => {
+      if (field.type !== "number") return true;
+      const val = form[field.name];
+      return (
+        val !== "" &&
+        val !== undefined &&
+        val !== null &&
+        !isNaN(val) &&
+        val >= field.min &&
+        val <= field.max
+      );
+    });
   };
 
   /**

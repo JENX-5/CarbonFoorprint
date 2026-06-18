@@ -2,8 +2,11 @@
  * @module simulatorEngine
  * Calculates projections and "what-if" scenarios for carbon footprint reduction.
  */
-import { EMISSION_FACTORS } from "./constants.js";
-import { CarbonData as Data } from "./data.js";
+import { EMISSION_FACTORS } from "@/lib/constants.js";
+import { CarbonData as Data } from "@/lib/data.js";
+
+const DAYS_PER_YEAR = 365;
+const MONTHS_PER_YEAR = 12;
 
 /**
  * Evaluates lifestyle changes against baseline emissions.
@@ -35,13 +38,13 @@ export function runSimulation(values, byCategoryAnnual, sliders) {
     byCategoryAnnual.transportation * (1 - sliders.driveLessPercent / 100);
   const newElectricity =
     values.electricityKwhPerMonth *
-    12 *
+    MONTHS_PER_YEAR *
     f.electricity.gridFactor *
     (1 - sliders.renewableTarget / 100);
 
   let dietFactor = f.diet[sliders.dietTarget];
   if (typeof dietFactor !== "number") dietFactor = f.diet[values.dietType];
-  const newDiet = dietFactor * 365;
+  const newDiet = dietFactor * DAYS_PER_YEAR;
 
   const newWaste =
     byCategoryAnnual.waste * (1 - sliders.wasteReducePercent / 100);

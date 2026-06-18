@@ -1,8 +1,9 @@
 import { useLocation } from "react-router-dom";
-import { findNavItemByPath } from "../../lib/navigation.js";
-import { BrandMark } from "../common/BrandMark.jsx";
-import { Menu, Sun, Moon, Monitor, Trophy } from "../icons/index.jsx";
-import { useAppState } from "../../state/AppStateContext.jsx";
+import PropTypes from "prop-types";
+import { findNavItemByPath } from "@/lib/navigation.js";
+import { BrandMark } from "@/components/common/BrandMark.jsx";
+import { Menu, Sun, Moon, Monitor, Trophy } from "@/components/icons/index.jsx";
+import { useAppState } from "@/state/AppStateContext.jsx";
 
 const THEME_CYCLE = { system: "light", light: "dark", dark: "system" };
 const THEME_ICON = { system: Monitor, light: Sun, dark: Moon };
@@ -12,6 +13,16 @@ const THEME_LABEL = {
   dark: "Dark theme",
 };
 
+/**
+ * @typedef {Object} TopbarProps
+ * @property {() => void} onOpenMobileNav - Callback to open mobile navigation.
+ */
+
+/**
+ * Topbar component. Desktop header that shows active route breadcrumb, user eco badge score, and theme toggle buttons.
+ *
+ * @param {TopbarProps} props
+ */
 export function Topbar({ onOpenMobileNav }) {
   const location = useLocation();
   const current = findNavItemByPath(location.pathname);
@@ -67,3 +78,7 @@ export function Topbar({ onOpenMobileNav }) {
     </header>
   );
 }
+
+Topbar.propTypes = {
+  onOpenMobileNav: PropTypes.func.isRequired,
+};

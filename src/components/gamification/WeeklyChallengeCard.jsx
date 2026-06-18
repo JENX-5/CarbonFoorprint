@@ -1,6 +1,25 @@
-import { Trophy, CircleCheck } from "../icons/index.jsx";
-import { Button } from "../common/Button.jsx";
+import PropTypes from "prop-types";
+import { Trophy, CircleCheck } from "@/components/icons/index.jsx";
+import { Button } from "@/components/common/Button.jsx";
 
+/**
+ * @typedef {Object} WeeklyChallenge
+ * @property {string} weekKey - The current ISO week key.
+ * @property {{ title: string, description: string, points: number }} challenge - The challenge details object.
+ */
+
+/**
+ * @typedef {Object} WeeklyChallengeCardProps
+ * @property {WeeklyChallenge} challenge - The current week's active challenge data.
+ * @property {string[]} completedWeeks - List of completed week keys.
+ * @property {() => void} onComplete - Callback when the challenge is marked complete.
+ */
+
+/**
+ * WeeklyChallengeCard component. Displays current active challenge details, points, and completion status.
+ *
+ * @param {WeeklyChallengeCardProps} props
+ */
 export function WeeklyChallengeCard({ challenge, completedWeeks, onComplete }) {
   const isComplete = completedWeeks.includes(challenge.weekKey);
 
@@ -34,3 +53,16 @@ export function WeeklyChallengeCard({ challenge, completedWeeks, onComplete }) {
     </div>
   );
 }
+
+WeeklyChallengeCard.propTypes = {
+  challenge: PropTypes.shape({
+    weekKey: PropTypes.string.isRequired,
+    challenge: PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      points: PropTypes.number.isRequired,
+    }).isRequired,
+  }).isRequired,
+  completedWeeks: PropTypes.arrayOf(PropTypes.string).isRequired,
+  onComplete: PropTypes.func.isRequired,
+};

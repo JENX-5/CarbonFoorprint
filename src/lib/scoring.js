@@ -5,8 +5,8 @@
  * on annual carbon footprints.
  * ---------------------------------------------------------------------------
  */
-import { CarbonData as Data } from "./data.js";
-import { clamp } from "./format.js";
+import { CarbonData as Data } from "@/lib/data.js";
+import { clamp } from "@/lib/format.js";
 
 /**
  * Computes the environmental eco score (0 to 100) based on annual carbon footprint.
@@ -33,11 +33,16 @@ export function getRating(score) {
   for (let i = 0; i < thresholds.length; i++) {
     if (score >= thresholds[i].min) {
       const { min, label, className } = thresholds[i];
-      return { id: className, label, min };
+      return { id: className, className, label, min };
     }
   }
   const last = thresholds[thresholds.length - 1];
-  return { id: last.className, label: last.label, min: last.min };
+  return {
+    id: last.className,
+    className: last.className,
+    label: last.label,
+    min: last.min,
+  };
 }
 
 /**

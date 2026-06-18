@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { appReducer } from "../src/state/appReducer.js";
-import { defaultState } from "../src/lib/storage.js";
-import { getCurrentChallenge } from "../src/lib/gamification.js";
+import { appReducer } from "@/state/appReducer.js";
+import { defaultState } from "@/lib/storage.js";
+import { getCurrentChallenge } from "@/lib/gamification.js";
 
 describe("appReducer full coverage", () => {
   const base = defaultState();

@@ -1,5 +1,5 @@
 import { describe, beforeAll, afterAll, it, expect } from "vitest";
-import { Logger } from "../src/lib/logger.js";
+import { Logger } from "@/lib/logger.js";
 
 describe("Logger utility", () => {
   const originalLog = console.log;

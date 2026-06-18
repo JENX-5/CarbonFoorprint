@@ -7,22 +7,22 @@ import {
   useReducer,
   useRef,
 } from "react";
-import { appReducer } from "./appReducer.js";
-import { loadState, Storage } from "../lib/storage.js";
-import { computeFootprint } from "../lib/calculations.js";
+import { appReducer } from "@/state/appReducer.js";
+import { loadState, Storage } from "@/lib/storage.js";
+import { computeFootprint } from "@/lib/calculations.js";
 import {
   computeScore,
   getRating,
   compareToGlobalAverage,
-} from "../lib/scoring.js";
-import { generateInsights } from "../lib/insightsEngine.js";
+} from "@/lib/scoring.js";
+import { generateInsights } from "@/lib/insightsEngine.js";
 import {
   getLevel,
   getLevelProgress,
   getCurrentChallenge,
-} from "../lib/gamification.js";
-import { CarbonData as Data } from "../lib/data.js";
-import { useToast } from "../components/common/Toast.jsx";
+} from "@/lib/gamification.js";
+import { CarbonData as Data } from "@/lib/data.js";
+import { useToast } from "@/components/common/Toast.jsx";
 import {
   Award,
   Leaf,
@@ -35,7 +35,7 @@ import {
   Trophy,
   CircleCheck,
   TreePine,
-} from "../components/icons/index.jsx";
+} from "@/components/icons/index.jsx";
 
 const ACHIEVEMENT_ICONS = {
   firstCalculation: Leaf,
@@ -51,6 +51,8 @@ const ACHIEVEMENT_ICONS = {
 };
 
 const AppStateContext = createContext(null);
+
+const DEBOUNCE_DELAY_MS = 300;
 
 function downloadJson(filename, data) {
   const blob = new Blob([JSON.stringify(data, null, 2)], {
@@ -72,10 +74,25 @@ export function AppStateProvider({ children }) {
   const prevLevelRef = useRef(null);
   const isFirstRender = useRef(true);
 
+  const debounceTimerRef = useRef(null);
+
   useEffect(() => {
     const persisted = { ...state };
     delete persisted._meta;
-    Storage.save(persisted);
+
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    debounceTimerRef.current = setTimeout(() => {
+      Storage.save(persisted);
+    }, DEBOUNCE_DELAY_MS);
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
   }, [state]);
 
   useEffect(() => {

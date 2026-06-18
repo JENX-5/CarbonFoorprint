@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { validateField } from "../src/lib/validation.js";
-import { FIELD_BOUNDS } from "../src/lib/calculations.js";
+import { validateField } from "@/lib/calculations.js";
+import { FIELD_BOUNDS } from "@/lib/calculations.js";
 
 describe("validateField utility", () => {
   it("passes for valid values within bounds", () => {

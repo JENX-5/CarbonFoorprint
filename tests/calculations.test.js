@@ -3,7 +3,7 @@ import {
   computeFootprint,
   validateField,
   DEFAULT_CALCULATOR_INPUTS,
-} from "../src/lib/calculations.js";
+} from "@/lib/calculations.js";
 
 describe("Calculations Engine", () => {
   describe("validateField", () => {
@@ -72,8 +72,8 @@ describe("Calculations Engine", () => {
       const results = computeFootprint(zeroInputs);
       expect(results.byCategoryAnnual.transportation).toBe(0);
       expect(results.byCategoryAnnual.electricity).toBe(0);
-      // Vegan diet factor is 1000 * 365 = 365,000 kg, or depends on f.diet.vegan
-      expect(results.byCategoryAnnual.diet).toBe(1000 * 365);
+      // Vegan diet factor is 2.89 * 365
+      expect(results.byCategoryAnnual.diet).toBe(2.89 * 365);
       expect(results.byCategoryAnnual.waste).toBe(0);
       expect(results.byCategoryAnnual.water).toBe(0);
     });

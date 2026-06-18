@@ -1,7 +1,21 @@
 import { Link } from "react-router-dom";
-import { ScoreRing } from "../../components/common/ScoreRing.jsx";
-import { formatNumber } from "../../lib/format.js";
+import PropTypes from "prop-types";
+import { ScoreRing } from "@/components/common/ScoreRing.jsx";
+import { formatNumber } from "@/lib/format.js";
 
+/**
+ * @typedef {Object} ScoreCardProps
+ * @property {number} score - The user's Eco Score from 0 to 100.
+ * @property {{ label: string, className: string }} rating - The rating description and CSS class wrapper.
+ * @property {{ name: string, min: number }} level - The current Eco Level name and minimum requirements.
+ * @property {{ next: { name: string, min: number } | null, percent: number, pointsToNext: number }} levelProgress - Details about progress to the next level.
+ */
+
+/**
+ * ScoreCard component. Displays circular gauge Eco Score, rating string, and level progress bar.
+ *
+ * @param {ScoreCardProps} props
+ */
 export function ScoreCard({ score, rating, level, levelProgress }) {
   return (
     <div className="score-panel">
@@ -42,3 +56,23 @@ export function ScoreCard({ score, rating, level, levelProgress }) {
     </div>
   );
 }
+
+ScoreCard.propTypes = {
+  score: PropTypes.number.isRequired,
+  rating: PropTypes.shape({
+    label: PropTypes.string.isRequired,
+    className: PropTypes.string.isRequired,
+  }).isRequired,
+  level: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    min: PropTypes.number.isRequired,
+  }).isRequired,
+  levelProgress: PropTypes.shape({
+    next: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      min: PropTypes.number.isRequired,
+    }),
+    percent: PropTypes.number.isRequired,
+    pointsToNext: PropTypes.number.isRequired,
+  }).isRequired,
+};

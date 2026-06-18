@@ -1,16 +1,18 @@
-import { useAppState } from "../../state/AppStateContext.jsx";
-import { useDocumentTitle } from "../../hooks/useDocumentTitle.js";
-import { KpiStrip } from "./KpiStrip.jsx";
-import { EmissionsDonut } from "./EmissionsDonut.jsx";
-import { TrendChart } from "./TrendChart.jsx";
-import { BenchmarkBar } from "./BenchmarkBar.jsx";
-import { ScoreCard } from "./ScoreCard.jsx";
-import { TopDriverCard } from "./TopDriverCard.jsx";
-import { StreakCard } from "../../components/gamification/StreakCard.jsx";
-import { DailyChecklistCard } from "../../components/gamification/DailyChecklistCard.jsx";
-import { PageHeader } from "../../components/common/PageHeader.jsx";
-import { LayoutDashboard } from "../../components/icons/index.jsx";
+import { useAppState } from "@/state/AppStateContext.jsx";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle.js";
+import { KpiStrip } from "@/pages/dashboard/KpiStrip.jsx";
+import { EmissionsDonut } from "@/pages/dashboard/EmissionsDonut.jsx";
+import { TrendChart } from "@/pages/dashboard/TrendChart.jsx";
+import { BenchmarkBar } from "@/pages/dashboard/BenchmarkBar.jsx";
+import { ScoreCard } from "@/pages/dashboard/ScoreCard.jsx";
+import { TopDriverCard } from "@/pages/dashboard/TopDriverCard.jsx";
+import { StreakCard } from "@/components/gamification/StreakCard.jsx";
+import { DailyChecklistCard } from "@/components/gamification/DailyChecklistCard.jsx";
+import { PageHeader } from "@/components/common/PageHeader.jsx";
+import { LayoutDashboard } from "@/components/icons/index.jsx";
 import { Link } from "react-router-dom";
+
+import { ErrorBoundary } from "@/components/common/ErrorBoundary.jsx";
 
 export function DashboardPage() {
   const { state, derived } = useAppState();
@@ -36,11 +38,17 @@ export function DashboardPage() {
         <div className="dashboard-grid__main">
           <div className="chart-panel">
             <h3>Emissions breakdown</h3>
-            <EmissionsDonut byCategoryAnnual={state.results.byCategoryAnnual} />
+            <ErrorBoundary>
+              <EmissionsDonut
+                byCategoryAnnual={state.results.byCategoryAnnual}
+              />
+            </ErrorBoundary>
           </div>
           <div className="chart-panel">
             <h3>Footprint over time</h3>
-            <TrendChart history={state.history} />
+            <ErrorBoundary>
+              <TrendChart history={state.history} />
+            </ErrorBoundary>
           </div>
           <div className="chart-panel">
             <h3>Where you stand</h3>

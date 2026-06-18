@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { findNavItemByPath, NAV_ITEMS } from "../src/lib/navigation.js";
+import { findNavItemByPath, NAV_ITEMS } from "@/lib/navigation.js";
 
 describe("Navigation config and utility", () => {
   it("should export list of valid navigation items", () => {

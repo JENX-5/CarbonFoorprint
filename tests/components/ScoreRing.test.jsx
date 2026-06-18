@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { ScoreRing } from "../../src/components/common/ScoreRing.jsx";
+import { ScoreRing } from "@/components/common/ScoreRing.jsx";
 
 describe("ScoreRing component", () => {
   beforeEach(() => {

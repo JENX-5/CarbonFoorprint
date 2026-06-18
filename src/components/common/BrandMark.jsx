@@ -1,7 +1,16 @@
+import PropTypes from "prop-types";
+
+/**
+ * @typedef {Object} BrandMarkProps
+ * @property {number} [size=34] - The height and width pixel size of the SVG brand mark logo.
+ */
+
 /**
  * Three concentric, slightly irregular rings standing in for topographic
  * contour lines — the brand's one signature shape. Reused at every scale:
  * sidebar brand mark, mobile header, onboarding hero, and the favicon.
+ *
+ * @param {BrandMarkProps} props
  */
 export function BrandMark({ size = 34 }) {
   return (
@@ -27,3 +36,7 @@ export function BrandMark({ size = 34 }) {
     </svg>
   );
 }
+
+BrandMark.propTypes = {
+  size: PropTypes.number,
+};

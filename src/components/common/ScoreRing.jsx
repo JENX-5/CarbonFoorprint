@@ -13,6 +13,7 @@
  * ---------------------------------------------------------------------------
  */
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 
 const SIZE = 180;
 const CENTER = SIZE / 2;
@@ -37,29 +38,24 @@ export function ScoreRing({
   const [drawnScore, setDrawnScore] = useState(animate ? 0 : target);
 
   useEffect(() => {
-    let active = true;
-    let nestedRaf = null;
+    if (!animate) return undefined;
 
-    const mainRaf = requestAnimationFrame(() => {
-      if (!active) return;
-      if (!animate) {
+    let drawId = null;
+    const resetId = setTimeout(() => {
+      setDrawnScore(0);
+      drawId = setTimeout(() => {
         setDrawnScore(target);
-      } else {
-        setDrawnScore(0);
-        nestedRaf = requestAnimationFrame(() => {
-          if (active) setDrawnScore(target);
-        });
-      }
-    });
+      }, 50);
+    }, 0);
 
     return () => {
-      active = false;
-      cancelAnimationFrame(mainRaf);
-      if (nestedRaf) cancelAnimationFrame(nestedRaf);
+      clearTimeout(resetId);
+      if (drawId) clearTimeout(drawId);
     };
   }, [target, animate]);
 
-  const dashOffset = CIRCUMFERENCE * (1 - drawnScore / 100);
+  const currentDrawnScore = animate ? drawnScore : target;
+  const dashOffset = CIRCUMFERENCE * (1 - currentDrawnScore / 100);
   const color = RATING_COLOR_VAR[ratingClassName] || "var(--color-canopy)";
 
   return (
@@ -112,3 +108,10 @@ export function ScoreRing({
     </div>
   );
 }
+
+ScoreRing.propTypes = {
+  score: PropTypes.number,
+  ratingClassName: PropTypes.string,
+  size: PropTypes.number,
+  animate: PropTypes.bool,
+};

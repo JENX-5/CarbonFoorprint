@@ -1,4 +1,5 @@
-import { CarbonData as Data } from "../../lib/data.js";
+import PropTypes from "prop-types";
+import { CarbonData as Data } from "@/lib/data.js";
 import {
   Lock,
   Leaf,
@@ -12,7 +13,7 @@ import {
   CircleCheck,
   TreePine,
   Award,
-} from "../icons/index.jsx";
+} from "@/components/icons/index.jsx";
 
 const ACHIEVEMENT_ICONS = {
   firstCalculation: Leaf,
@@ -54,3 +55,7 @@ export function AchievementsGrid({ unlockedAchievements }) {
     </ul>
   );
 }
+
+AchievementsGrid.propTypes = {
+  unlockedAchievements: PropTypes.arrayOf(PropTypes.string).isRequired,
+};

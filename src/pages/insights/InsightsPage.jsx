@@ -1,10 +1,10 @@
-import { useAppState } from "../../state/AppStateContext.jsx";
-import { useDocumentTitle } from "../../hooks/useDocumentTitle.js";
-import { PageHeader } from "../../components/common/PageHeader.jsx";
-import { Sparkles, CATEGORY_ICONS } from "../../components/icons/index.jsx";
-import { EmptyState } from "../../components/common/EmptyState.jsx";
-import { CarbonData as Data } from "../../lib/data.js";
-import { formatNumber } from "../../lib/format.js";
+import { useAppState } from "@/state/AppStateContext.jsx";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle.js";
+import { PageHeader } from "@/components/common/PageHeader.jsx";
+import { Sparkles, CATEGORY_ICONS } from "@/components/icons/index.jsx";
+import { EmptyState } from "@/components/common/EmptyState.jsx";
+import { CarbonData as Data } from "@/lib/data.js";
+import { formatNumber } from "@/lib/format.js";
 
 /**
  * InsightsPage component rendering tailored sustainability tips and drivers.
@@ -41,113 +41,41 @@ export function InsightsPage() {
         description="Get personalized, data-backed suggestions to reduce your carbon footprint."
       />
 
-      <div className="insights" style={{ marginTop: "2rem" }}>
+      <div className="insights insights--margin-top">
         <div className="insight-card insight-card--primary">
-          <h3
-            style={{
-              fontSize: "1.05rem",
-              fontWeight: 600,
-              color: "var(--color-charcoal-soft)",
-              margin: "0 0 0.5rem 0",
-            }}
-          >
-            Highest emission source
-          </h3>
+          <h3 className="insight-card__title">Highest emission source</h3>
           <p className="insight-card__headline">
             {CategoryIcon && (
-              <CategoryIcon
-                size={24}
-                style={{
-                  display: "inline",
-                  marginRight: "8px",
-                  verticalAlign: "middle",
-                }}
-              />
+              <CategoryIcon size={24} className="insight-card__category-icon" />
             )}
             {Data.CATEGORY_LABELS[topCategory]}
           </p>
-          <p
-            style={{
-              margin: 0,
-              fontSize: "0.95rem",
-              color: "var(--color-charcoal-soft)",
-            }}
-          >
+          <p className="insight-card__sub-text">
             {Data.CATEGORY_LABELS[topCategory]} makes up about{" "}
             <strong>{Math.round(topShare)}%</strong> of your annual footprint.
           </p>
         </div>
 
         <div className="insight-card">
-          <h3
-            style={{
-              fontSize: "1.05rem",
-              fontWeight: 600,
-              color: "var(--color-charcoal-soft)",
-              margin: "0 0 1rem 0",
-            }}
-          >
+          <h3 className="insight-card__title insight-card__title--recommendations">
             Personalized recommendations
           </h3>
           <ul className="recommendation-list">
             {recommendations.map((rec, i) => {
               const Icon = CATEGORY_ICONS[rec.category];
               return (
-                <li
-                  key={i}
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: "1rem",
-                    padding: "1rem",
-                    background: "var(--color-mist)",
-                    borderRadius: "8px",
-                    border: "1px solid var(--color-line)",
-                  }}
-                >
-                  <div
-                    style={{
-                      background: "var(--color-paper)",
-                      padding: "8px",
-                      borderRadius: "50%",
-                      boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-                      color: "var(--color-canopy)",
-                    }}
-                  >
+                <li key={i} className="recommendation-item">
+                  <div className="recommendation-item__icon-wrap">
                     <Icon size={18} />
                   </div>
                   <div>
-                    <span
-                      style={{
-                        fontSize: "0.8rem",
-                        fontWeight: 700,
-                        textTransform: "uppercase",
-                        color: "var(--color-moss)",
-                        letterSpacing: "0.05em",
-                      }}
-                    >
+                    <span className="recommendation-item__category">
                       {Data.CATEGORY_LABELS[rec.category]}
                     </span>
-                    <p
-                      style={{
-                        margin: "0.25rem 0",
-                        fontSize: "0.95rem",
-                        fontWeight: 600,
-                        color: "var(--color-charcoal)",
-                      }}
-                    >
-                      {rec.text}
-                    </p>
-                    <p
-                      style={{
-                        margin: 0,
-                        fontSize: "0.85rem",
-                        color: "var(--color-moss)",
-                        fontWeight: 500,
-                      }}
-                    >
+                    <p className="recommendation-item__text">{rec.text}</p>
+                    <p className="recommendation-item__savings">
                       Saves approx.{" "}
-                      <strong style={{ color: "var(--color-clay)" }}>
+                      <strong className="recommendation-item__savings-value">
                         {formatNumber(rec.savingsKg, 0)} kg CO2e / yr
                       </strong>
                     </p>
@@ -158,34 +86,14 @@ export function InsightsPage() {
           </ul>
         </div>
 
-        <div
-          className="insight-card insight-card--accent"
-          style={{ background: "var(--color-good-bg)" }}
-        >
-          <h3
-            style={{
-              fontSize: "1.05rem",
-              fontWeight: 600,
-              color: "var(--color-canopy-dark)",
-              margin: "0 0 0.5rem 0",
-            }}
-          >
+        <div className="insight-card insight-card--accent">
+          <h3 className="insight-card__title insight-card__title--accent">
             Potential annual impact
           </h3>
-          <p
-            className="insight-card__headline"
-            style={{ color: "var(--color-canopy-dark)" }}
-          >
+          <p className="insight-card__headline insight-card__headline--accent">
             {formatNumber(totalPotentialSavings, 0)} kg CO2e saved / yr
           </p>
-          <p
-            style={{
-              margin: 0,
-              fontSize: "0.92rem",
-              color: "var(--color-canopy-dark)",
-              opacity: 0.85,
-            }}
-          >
+          <p className="insight-card__sub-text insight-card__sub-text--accent">
             If you implement all recommended improvements, you would reduce your
             footprint by {formatNumber(totalPotentialSavings / 1000, 1)} metric
             tonnes of CO2e annually.

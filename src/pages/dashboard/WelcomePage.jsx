@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useAppState } from "../../state/AppStateContext.jsx";
-import { BrandMark } from "../../components/common/BrandMark.jsx";
+import { useAppState } from "@/state/AppStateContext.jsx";
+import { BrandMark } from "@/components/common/BrandMark.jsx";
 import {
   ArrowRight,
   Calculator,
@@ -8,36 +8,23 @@ import {
   SlidersHorizontal,
   Trophy,
   Upload,
-  ChevronLeft,
-  ChevronRight,
-  Check,
-} from "../../components/icons/index.jsx";
-import { useCalculatorForm } from "../../hooks/useCalculatorForm.js";
-import { Stepper } from "../../components/common/Stepper.jsx";
-import { LiveEstimatePanel } from "./LiveEstimatePanel.jsx";
-import { FieldRow } from "../../components/common/FieldRow.jsx";
-import { Button } from "../../components/common/Button.jsx";
-import { CarbonData as Data } from "../../lib/data.js";
-import { DEFAULT_INPUTS } from "../../lib/constants.js";
+} from "@/components/icons/index.jsx";
+import { useCalculatorForm } from "@/hooks/useCalculatorForm.js";
+import { LiveEstimatePanel } from "@/pages/dashboard/LiveEstimatePanel.jsx";
+import { DEFAULT_INPUTS } from "@/lib/constants.js";
+import { CalculatorWizard } from "@/components/common/CalculatorWizard.jsx";
 
+/**
+ * WelcomePage Component.
+ * The landing onboarding gate shown to users when no carbon footprint results
+ * exist in storage. Offers quick-start demo loads, file state imports, or
+ * launches the interactive multi-step onboarding wizard.
+ */
 export function WelcomePage() {
   const { actions } = useAppState();
   const [isCalculating, setIsCalculating] = useState(false);
 
-  const {
-    form,
-    currentIndex,
-    furthestAllowedIndex,
-    errors,
-    steps,
-    currentStep,
-    handleChange,
-    isStepValid,
-    handleNext,
-    handleBack,
-    handleStepClick,
-    isAllValid,
-  } = useCalculatorForm(DEFAULT_INPUTS);
+  const wizard = useCalculatorForm(DEFAULT_INPUTS);
 
   const handleStartCalculator = () => {
     setIsCalculating(true);
@@ -84,11 +71,8 @@ export function WelcomePage() {
     reader.readAsText(file);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (isAllValid()) {
-      actions.calculate(form);
-    }
+  const handleSubmit = (form) => {
+    actions.calculate(form);
   };
 
   return (
@@ -182,175 +166,12 @@ export function WelcomePage() {
             </div>
           ) : (
             <div className="welcome-page__calculator animate-fade-in">
-              <div className="welcome-page__calc-header">
-                <button
-                  className="welcome-page__back-link"
-                  onClick={() => setIsCalculating(false)}
-                >
-                  <ChevronLeft size={16} /> Back to Intro
-                </button>
-                <div className="welcome-page__calc-brand">
-                  <BrandMark size={32} />
-                  <span>Contour Wizard</span>
-                </div>
-              </div>
-
-              <Stepper
-                steps={steps}
-                currentIndex={currentIndex}
-                furthestAllowedIndex={furthestAllowedIndex}
-                onStepClick={handleStepClick}
+              <CalculatorWizard
+                wizard={wizard}
+                onSubmit={handleSubmit}
+                onBackToIntro={() => setIsCalculating(false)}
+                showBrandHeader={true}
               />
-
-              <div className="welcome-page__calc-content">
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.75rem",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  {currentStep.icon && (
-                    <currentStep.icon
-                      size={22}
-                      className="contour-ring--3"
-                      style={{ color: "var(--color-canopy)" }}
-                    />
-                  )}
-                  <h3 style={{ margin: 0 }}>{currentStep.label}</h3>
-                </div>
-                <p
-                  className="hero__lede"
-                  style={{
-                    marginBottom: "2rem",
-                    fontSize: "0.95rem",
-                    color: "var(--color-slate-400)",
-                  }}
-                >
-                  {currentStep.intro}
-                </p>
-
-                {currentStep.id !== "review" ? (
-                  <div className="calc-fields">
-                    {currentStep.fields?.map((field) => (
-                      <FieldRow
-                        key={field.name}
-                        field={field}
-                        value={form[field.name]}
-                        error={errors[field.name]}
-                        onChange={handleChange}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="review-summary">
-                    <style>{`
-                      .review-table {
-                        width: 100%;
-                        border-collapse: collapse;
-                        margin-bottom: 2rem;
-                      }
-                      .review-table th, .review-table td {
-                        padding: 0.75rem 1rem;
-                        text-align: left;
-                        border-bottom: 1px solid var(--color-line);
-                      }
-                      .review-table th {
-                        background: var(--color-mist);
-                        font-family: var(--font-display);
-                        font-weight: 700;
-                      }
-                      .review-category {
-                        font-weight: 700;
-                        color: var(--color-canopy);
-                      }
-                    `}</style>
-                    <table className="review-table">
-                      <thead>
-                        <tr>
-                          <th>Category</th>
-                          <th>Input Details</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td className="review-category">Transportation</td>
-                          <td>
-                            Vehicle: {Data.VEHICLE_LABELS[form.vehicleType]}{" "}
-                            <br />
-                            Commute: {form.commuteKmPerDay} km / day <br />
-                            Transit: {form.transitKmPerWeek} km / week <br />
-                            Flights: {form.flightsShortHaulPerYear} short / yr,{" "}
-                            {form.flightsLongHaulPerYear} long / yr
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="review-category">Electricity</td>
-                          <td>
-                            Usage: {form.electricityKwhPerMonth} kWh / month{" "}
-                            <br />
-                            Renewable: {form.renewablePercent}%
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="review-category">Diet</td>
-                          <td>Diet: {Data.DIET_LABELS[form.dietType]}</td>
-                        </tr>
-                        <tr>
-                          <td className="review-category">Waste & Water</td>
-                          <td>
-                            Waste: {form.wasteKgPerWeek} kg / week (
-                            {form.recycledPercent}% recycled) <br />
-                            Water: {form.waterLitersPerDay} L / day (
-                            {form.waterHeatedMostly
-                              ? "heated mostly"
-                              : "cold mostly"}
-                            )
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-
-                <div
-                  className="calc-form__actions"
-                  style={{ marginTop: "2.5rem", display: "flex", gap: "1rem" }}
-                >
-                  {currentIndex > 0 && (
-                    <Button
-                      variant="ghost"
-                      icon={ChevronLeft}
-                      onClick={handleBack}
-                    >
-                      Back
-                    </Button>
-                  )}
-
-                  {currentIndex < steps.length - 1 ? (
-                    <Button
-                      variant="primary"
-                      icon={ChevronRight}
-                      iconPosition="right"
-                      onClick={handleNext}
-                      disabled={!isStepValid(currentIndex)}
-                      style={{ marginLeft: "auto" }}
-                    >
-                      Next
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="primary"
-                      icon={Check}
-                      onClick={handleSubmit}
-                      style={{ marginLeft: "auto" }}
-                    >
-                      Calculate Footprint
-                    </Button>
-                  )}
-                </div>
-              </div>
             </div>
           )}
         </div>
@@ -390,7 +211,7 @@ export function WelcomePage() {
           ) : (
             <div className="welcome-page__live-side animate-fade-in">
               <div className="welcome-page__live-wrapper">
-                <LiveEstimatePanel form={form} />
+                <LiveEstimatePanel form={wizard.form} />
               </div>
             </div>
           )}

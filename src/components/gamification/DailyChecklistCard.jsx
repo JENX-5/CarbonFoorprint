@@ -1,9 +1,20 @@
-import { CarbonData as Data } from "../../lib/data.js";
-import { getTodayKey } from "../../lib/format.js";
-import { useAppState } from "../../state/AppStateContext.jsx";
-import { Check } from "../icons/index.jsx";
+import PropTypes from "prop-types";
+import { CarbonData as Data } from "@/lib/data.js";
+import { getTodayKey } from "@/lib/format.js";
+import { useAppState } from "@/state/AppStateContext.jsx";
+import { Check } from "@/components/icons/index.jsx";
 import { Link } from "react-router-dom";
 
+/**
+ * @typedef {Object} DailyChecklistCardProps
+ * @property {boolean} [compact=false] - Whether to render a compact version showing fewer checklist items.
+ */
+
+/**
+ * DailyChecklistCard component. Displays daily sustainable action checkboxes for users to tick.
+ *
+ * @param {DailyChecklistCardProps} props
+ */
 export function DailyChecklistCard({ compact = false }) {
   const { state, actions } = useAppState();
   const todayKey = getTodayKey();
@@ -60,3 +71,7 @@ export function DailyChecklistCard({ compact = false }) {
     </div>
   );
 }
+
+DailyChecklistCard.propTypes = {
+  compact: PropTypes.bool,
+};

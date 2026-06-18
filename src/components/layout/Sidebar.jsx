@@ -1,15 +1,29 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
-import { NAV_ITEMS } from "../../lib/navigation.js";
-import { BrandMark } from "../common/BrandMark.jsx";
+import { NAV_ITEMS } from "@/lib/navigation.js";
+import { BrandMark } from "@/components/common/BrandMark.jsx";
 import {
   ChevronLeft,
   ChevronRight,
   Download,
   RotateCcw,
-} from "../icons/index.jsx";
-import { useAppState } from "../../state/AppStateContext.jsx";
+} from "@/components/icons/index.jsx";
+import { useAppState } from "@/state/AppStateContext.jsx";
 
+/**
+ * @typedef {Object} SidebarProps
+ * @property {boolean} isOpen - Whether the mobile sidebar is currently open.
+ * @property {() => void} onClose - Callback to close the mobile sidebar drawer.
+ * @property {boolean} collapsed - Whether the desktop sidebar is collapsed to icon-only view.
+ * @property {() => void} onToggleCollapsed - Callback to toggle desktop collapse state.
+ */
+
+/**
+ * Sidebar component. Main navigation container displaying brand mark, nav items list, export/reset links.
+ *
+ * @param {SidebarProps} props
+ */
 export function Sidebar({ isOpen, onClose, collapsed, onToggleCollapsed }) {
   const { actions } = useAppState();
   const [confirmingReset, setConfirmingReset] = useState(false);
@@ -125,3 +139,10 @@ export function Sidebar({ isOpen, onClose, collapsed, onToggleCollapsed }) {
     </>
   );
 }
+
+Sidebar.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  collapsed: PropTypes.bool.isRequired,
+  onToggleCollapsed: PropTypes.func.isRequired,
+};

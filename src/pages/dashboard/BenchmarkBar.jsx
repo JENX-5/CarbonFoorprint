@@ -1,3 +1,15 @@
+import PropTypes from "prop-types";
+
+/**
+ * @typedef {Object} BenchmarkBarProps
+ * @property {number} annual - Annual carbon footprint in kg CO2e.
+ */
+
+/**
+ * BenchmarkBar component. Displays a colored bar comparing user's footprint to standard benchmarks.
+ *
+ * @param {BenchmarkBarProps} props
+ */
 export function BenchmarkBar({ annual }) {
   const maxScale = 10000;
   const percentage = Math.min((annual / maxScale) * 100, 100);
@@ -180,3 +192,7 @@ export function BenchmarkBar({ annual }) {
     </div>
   );
 }
+
+BenchmarkBar.propTypes = {
+  annual: PropTypes.number.isRequired,
+};

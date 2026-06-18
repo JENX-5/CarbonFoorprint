@@ -12,8 +12,12 @@
  *   isIn    -> threshold.indexOf(metrics[metric]) !== -1
  * ---------------------------------------------------------------------------
  */
-import { CarbonData as Data } from "./data.js";
-import { getTodayKey, getYesterdayKey, getCurrentWeekKey } from "./format.js";
+import { CarbonData as Data } from "@/lib/data.js";
+import {
+  getTodayKey,
+  getYesterdayKey,
+  getCurrentWeekKey,
+} from "@/lib/format.js";
 
 /**
  * Retrieves the level descriptor based on the current Eco Score.

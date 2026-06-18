@@ -1,4 +1,4 @@
-import { CATEGORY_ICONS, CircleCheck } from "../../components/icons/index.jsx";
+import { CATEGORY_ICONS, CircleCheck } from "@/components/icons/index.jsx";
 
 /**
  * Data-driven field configuration for the calculator wizard. Splitting the

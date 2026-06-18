@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { Button } from "../../src/components/common/Button.jsx";
+import { Button } from "@/components/common/Button.jsx";
 
 // Create a dummy Icon component for testing
 const DummyIcon = () => <svg data-testid="dummy-icon" />;

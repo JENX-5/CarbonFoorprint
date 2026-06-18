@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { SkipLink } from "./SkipLink.jsx";
-import { Sidebar } from "./Sidebar.jsx";
-import { Topbar } from "./Topbar.jsx";
+import { SkipLink } from "@/components/layout/SkipLink.jsx";
+import { Sidebar } from "@/components/layout/Sidebar.jsx";
+import { Topbar } from "@/components/layout/Topbar.jsx";
 
 const COLLAPSE_KEY = "contourSidebarCollapsed";
 
+/**
+ * AppShell component. The main dashboard layout wrapper containing the SkipLink, Sidebar, Topbar,
+ * and the main content router Outlet.
+ */
 export function AppShell() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(() => {
@@ -16,9 +20,9 @@ export function AppShell() {
     }
   });
   const location = useLocation();
-  const [lastPathname, setLastPathname] = useState(location.pathname);
-  if (location.pathname !== lastPathname) {
-    setLastPathname(location.pathname);
+  const [prevPathname, setPrevPathname] = useState(location.pathname);
+  if (location.pathname !== prevPathname) {
+    setPrevPathname(location.pathname);
     setMobileNavOpen(false);
   }
 

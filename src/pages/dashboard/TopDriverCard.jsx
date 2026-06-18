@@ -1,8 +1,32 @@
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { CarbonData as Data } from "../../lib/data.js";
-import { CATEGORY_ICONS, ArrowRight } from "../../components/icons/index.jsx";
-import { formatNumber } from "../../lib/format.js";
+import { CarbonData as Data } from "@/lib/data.js";
+import { CATEGORY_ICONS, ArrowRight } from "@/components/icons/index.jsx";
+import { formatNumber } from "@/lib/format.js";
 
+/**
+ * @typedef {Object} Recommendation
+ * @property {string} category - Category identifier.
+ * @property {number} savingsKg - Potential annual savings in kg CO2e.
+ */
+
+/**
+ * @typedef {Object} InsightsSummary
+ * @property {string} topCategory - The category contributing the most emissions.
+ * @property {number} topShare - Percentage contribution of the top category.
+ * @property {Recommendation[]} recommendations - Sorted list of potential category savings.
+ */
+
+/**
+ * @typedef {Object} TopDriverCardProps
+ * @property {InsightsSummary} insights - Emissions insights report summary.
+ */
+
+/**
+ * TopDriverCard component. Displays user's single largest emission category and highlights top saving opportunities.
+ *
+ * @param {TopDriverCardProps} props
+ */
 export function TopDriverCard({ insights }) {
   const Icon = CATEGORY_ICONS[insights.topCategory];
   const topSaving = insights.recommendations[0];
@@ -35,3 +59,16 @@ export function TopDriverCard({ insights }) {
     </div>
   );
 }
+
+TopDriverCard.propTypes = {
+  insights: PropTypes.shape({
+    topCategory: PropTypes.string.isRequired,
+    topShare: PropTypes.number.isRequired,
+    recommendations: PropTypes.arrayOf(
+      PropTypes.shape({
+        category: PropTypes.string.isRequired,
+        savingsKg: PropTypes.number.isRequired,
+      }),
+    ).isRequired,
+  }).isRequired,
+};

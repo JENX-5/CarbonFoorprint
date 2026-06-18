@@ -1,9 +1,27 @@
 import { useRef } from "react";
+import PropTypes from "prop-types";
+
+/**
+ * @typedef {Object} TabItem
+ * @property {string} id - Unique identifier for the tab.
+ * @property {string} label - Display label text for the tab.
+ * @property {React.ComponentType<{ size: number, "aria-hidden"?: string }>} [icon] - Optional icon component.
+ */
+
+/**
+ * @typedef {Object} TabsProps
+ * @property {TabItem[]} tabs - List of tab objects.
+ * @property {string} activeId - The currently active tab ID.
+ * @property {(id: string) => void} onChange - Callback triggered when tab active state changes.
+ * @property {string} [idPrefix="tab"] - Prefix for accessibility HTML id attributes.
+ */
 
 /**
  * Implements the WAI-ARIA "tabs" pattern (role=tablist/tab/tabpanel, arrow
  * key navigation, roving tabindex). The original Education Hub tabs were
  * plain buttons with no tab semantics or keyboard support beyond Tab/Enter.
+ *
+ * @param {TabsProps} props
  */
 export function Tabs({ tabs, activeId, onChange, idPrefix = "tab" }) {
   const refs = useRef({});
@@ -51,3 +69,16 @@ export function Tabs({ tabs, activeId, onChange, idPrefix = "tab" }) {
     </div>
   );
 }
+
+Tabs.propTypes = {
+  tabs: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      icon: PropTypes.elementType,
+    }),
+  ).isRequired,
+  activeId: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  idPrefix: PropTypes.string,
+};

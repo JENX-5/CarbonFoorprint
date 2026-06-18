@@ -6,11 +6,18 @@ import {
   useRef,
   useState,
 } from "react";
+import PropTypes from "prop-types";
 
 const ToastContext = createContext(null);
 
 let idCounter = 0;
+const DEFAULT_TOAST_DURATION_MS = 4500;
 
+/**
+ * ToastProvider component which provides context for dispatching notifications (toasts).
+ *
+ * @param {{ children: React.ReactNode }} props
+ */
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
   const timers = useRef(new Map());
@@ -27,7 +34,7 @@ export function ToastProvider({ children }) {
   const addToast = useCallback(
     (toast) => {
       const id = ++idCounter;
-      const duration = toast.duration || 4500;
+      const duration = toast.duration || DEFAULT_TOAST_DURATION_MS;
       setToasts((current) => [
         ...current,
         { id, variant: "default", ...toast },
@@ -80,6 +87,10 @@ export function ToastProvider({ children }) {
     </ToastContext.Provider>
   );
 }
+
+ToastProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export function useToast() {
   const ctx = useContext(ToastContext);

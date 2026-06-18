@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useAppState } from "../../state/AppStateContext.jsx";
-import { useDocumentTitle } from "../../hooks/useDocumentTitle.js";
-import { PageHeader } from "../../components/common/PageHeader.jsx";
-import { BookOpen, CATEGORY_ICONS } from "../../components/icons/index.jsx";
-import { Tabs } from "../../components/common/Tabs.jsx";
-import { CarbonData as Data } from "../../lib/data.js";
+import { useAppState } from "@/state/AppStateContext.jsx";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle.js";
+import { PageHeader } from "@/components/common/PageHeader.jsx";
+import { BookOpen, CATEGORY_ICONS } from "@/components/icons/index.jsx";
+import { Tabs } from "@/components/common/Tabs.jsx";
+import { CarbonData as Data } from "@/lib/data.js";
 
 export function LearnPage() {
   const { state, derived } = useAppState();

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { appReducer } from "../src/state/appReducer.js";
-import { defaultState } from "../src/lib/storage.js";
+import { appReducer } from "@/state/appReducer.js";
+import { defaultState } from "@/lib/storage.js";
 
 describe("App Reducer", () => {
   it("should handle CALCULATE action", () => {

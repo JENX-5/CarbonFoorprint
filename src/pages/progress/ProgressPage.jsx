@@ -1,10 +1,10 @@
-import { useAppState } from "../../state/AppStateContext.jsx";
-import { useDocumentTitle } from "../../hooks/useDocumentTitle.js";
-import { PageHeader } from "../../components/common/PageHeader.jsx";
-import { Trophy, Flame, Award } from "../../components/icons/index.jsx";
-import { DailyChecklistCard } from "../../components/gamification/DailyChecklistCard.jsx";
-import { WeeklyChallengeCard } from "../../components/gamification/WeeklyChallengeCard.jsx";
-import { AchievementsGrid } from "../../components/gamification/AchievementsGrid.jsx";
+import { useAppState } from "@/state/AppStateContext.jsx";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle.js";
+import { PageHeader } from "@/components/common/PageHeader.jsx";
+import { Trophy, Flame, Award } from "@/components/icons/index.jsx";
+import { DailyChecklistCard } from "@/components/gamification/DailyChecklistCard.jsx";
+import { WeeklyChallengeCard } from "@/components/gamification/WeeklyChallengeCard.jsx";
+import { AchievementsGrid } from "@/components/gamification/AchievementsGrid.jsx";
 
 export function ProgressPage() {
   const { state, derived, actions } = useAppState();
